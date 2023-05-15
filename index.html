@@ -18,19 +18,34 @@
       border: 2px dashed white;
       display: block;
     }
+
+    #welcome-text {
+      text-align: center;
+      font-size: 30px;
+      height: 50vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   </style>
 </head>
-<script src="WelcomeWagon.js"></script>
+<script src="WelcomeLasers.js"></script>
 
 <body id="body">
   <div id="welcome-box">
-    <canvas id="welcome-wagon"></canvas>
+    <canvas id="welcome-lasers"></canvas>
+    <noscript>
+      <div id="welcome-text">
+        Welcome!
+      </div>
+    </noscript>
   </div>
   </div>
 </body>
 <script>
+  var letters;
   var originalCanvasWidth = document.getElementById('body').offsetWidth;
-  const canvas = document.getElementById('welcome-wagon');
+  const canvas = document.getElementById('welcome-lasers');
   const ctx = canvas.getContext('2d');
   AttachEvents(window, 'resize', adjust);
   initCanvas();
