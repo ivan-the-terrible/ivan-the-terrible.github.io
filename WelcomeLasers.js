@@ -1,4 +1,26 @@
+import { AttachEvents } from "./util.js";
+
+var boundingBoxDebug = true;
+var letters = [];
+var laser = {
+  x: 0,
+  y: 0,
+  dx: 5,
+  dy: 5,
+  futureX() {
+    return this.x + this.dx;
+  },
+  futureY() {
+    return this.y + this.dy;
+  },
+};
+var originalCanvasWidth = document.getElementById("body").offsetWidth;
+const canvas = document.getElementById("welcome-lasers");
+const ctx = canvas.getContext("2d");
+initCanvas();
+
 function initCanvas() {
+  AttachEvents(window, "resize", adjust);
   canvas.width = originalCanvasWidth;
   canvas.height = window.innerHeight / 2;
   createLetters();
@@ -14,9 +36,6 @@ function adjust() {
   //Reset the canvasWidth variable.
   originalCanvasWidth = newCanvasWidth;
   initCanvas();
-}
-function AttachEvents(element, type, handler) {
-  element.addEventListener(type, handler);
 }
 function createLetters() {
   const fontSize = determineFontSize();
@@ -66,6 +85,7 @@ function determineFontSize() {
       return baseSize * 3;
   }
 }
+function determineLaserCollisionX() {}
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawDynamicText();

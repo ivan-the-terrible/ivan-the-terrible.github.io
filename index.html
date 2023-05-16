@@ -29,7 +29,7 @@
     }
   </style>
 </head>
-<script src="WelcomeLasers.js"></script>
+<script src="WelcomeLasers.js" type="module"></script>
 
 <body id="body">
   <div id="welcome-box">
@@ -42,22 +42,5 @@
   </div>
   </div>
 </body>
-<script>
-  var boundingBoxDebug = true;
-  var letters = [];
-  var laser = {
-    x: 0,
-    y: 0,
-    dx: 5,
-    dy: 5,
-    futureX() { return this.x + this.dx; },
-    futureY() { return this.y + this.dy; },
-  };
-  var originalCanvasWidth = document.getElementById('body').offsetWidth;
-  const canvas = document.getElementById('welcome-lasers');
-  const ctx = canvas.getContext('2d');
-  AttachEvents(window, 'resize', adjust);
-  initCanvas();
-</script>
 
 </html>
