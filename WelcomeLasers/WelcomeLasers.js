@@ -113,6 +113,7 @@ function determineFontSize() {
   }
 }
 function determineLaserCollisions() {
+  test();
   return { x: determineCollisionX(), y: determineCollisionY() };
 }
 function determineCollisionX() {
@@ -182,7 +183,6 @@ function fireLaserBeam() {
   adjustLaser(collisions);
 }
 function laserHitCanvas(side) {
-  console.log(side);
   switch (side) {
     case "Right":
       laser.x = canvas.width;
@@ -243,7 +243,7 @@ function placeLetter(length, currentIndex, letterLayoutOption) {
       //Keep it off the border
       if (length > 7) {
         if (currentIndex == 0) {
-          y -= 55;
+          y -= 65;
         } else if (currentIndex == length - 1) {
           x -= 35;
           y -= 35;
@@ -275,4 +275,30 @@ function resetLaserDueToCollision(collision) {
       laserHitLetter(collision[1]);
       break;
   }
+}
+
+function test() {
+  let indexToRemove;
+  let isLaserTouchingBox;
+  for (let i = 0; i < letters.length; i++) {
+    const letter = letters[i];
+    const letterXBoundary = letter.xBox + letter.width;
+    const letterYBoundary = letter.yBox + letter.height;
+
+    const isLaserTouchingBoxOnX =
+      laser.x >= letter.xBox && laser.x <= letterXBoundary;
+
+    const isLaserTouchingBoxOnY =
+      laser.y >= letter.yBox && laser.y <= letterYBoundary;
+
+    isLaserTouchingBox = isLaserTouchingBoxOnX && isLaserTouchingBoxOnY;
+    if (isLaserTouchingBox) {
+      indexToRemove = i;
+
+      if (isLaserTouchingBoxOnX) laser.dx *= -1;
+      if (isLaserTouchingBoxOnY) laser.dy *= -1;
+      break;
+    }
+  }
+  if (isLaserTouchingBox) letters.splice(indexToRemove, 1);
 }
