@@ -1,4 +1,4 @@
-import { AttachEvents } from "./util.js";
+import { AttachEvents } from "../util.js";
 
 var boundingBoxDebug = true;
 var letters = [];
