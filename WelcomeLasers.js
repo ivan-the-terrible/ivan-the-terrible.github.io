@@ -2,7 +2,7 @@ function initCanvas() {
   canvas.width = originalCanvasWidth;
   canvas.height = window.innerHeight / 2;
   createLetters();
-  window.requestAnimationFrame(draw);
+  draw();
 }
 function adjust() {
   //When the window's dimensions change:
@@ -13,18 +13,25 @@ function adjust() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   //Reset the canvasWidth variable.
   originalCanvasWidth = newCanvasWidth;
-  welcomeLasers();
+  initCanvas();
 }
 function AttachEvents(element, type, handler) {
   element.addEventListener(type, handler);
 }
 function createLetters() {
+  const fontSize = determineFontSize();
+  //Need to set font size so 'measureText' has accurate sizing
+  ctx.font = fontSize + "px Helvetica";
+  ctx.textAlign = "center";
+  ctx.fillStyle = "white";
+
   const message = "Welcome!";
   const letterLayoutOption = Math.floor(Math.random() * 3);
 
   for (let i = 0; i < message.length; i++) {
     const character = message[i];
     const letter = placeLetter(message.length, i, letterLayoutOption);
+    letter.character = character;
 
     const textMeasurements = ctx.measureText(character);
     letter.width = textMeasurements.width;
@@ -66,14 +73,9 @@ function draw() {
   window.requestAnimationFrame(draw);
 }
 function drawDynamicText() {
-  const fontSize = determineFontSize();
-  ctx.font = fontSize + "px Helvetica";
-  ctx.textAlign = "center";
-  ctx.fillStyle = "white";
-
   for (let i = 0; i < letters.length; i++) {
-    const character = letters[i];
-    ctx.fillText(character, letter.x, letter.y);
+    const letter = letters[i];
+    ctx.fillText(letter.character, letter.x, letter.y);
 
     if (boundingBoxDebug) {
       ctx.strokeStyle = "red";
@@ -83,7 +85,36 @@ function drawDynamicText() {
   //Holy Guacamole
   //https://stackoverflow.com/questions/1451635/how-to-make-canvas-text-selectable
 }
-function fireLaserBeam() {}
+function fireLaserBeam() {
+  ctx.beginPath();
+  ctx.moveTo(laser.x, laser.y);
+  ctx.lineTo(laser.futureX(), laser.futureY());
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = "white";
+  ctx.stroke();
+
+  //Bounce Laser (X coordinate)
+  if (laser.futureX() > canvas.width) {
+    laser.x = canvas.width;
+    laser.dx *= -1;
+  } else if (laser.futureX() < 0) {
+    laser.x = 0;
+    laser.dx *= -1;
+  } else {
+    laser.x += laser.dx;
+  }
+
+  //Bounce Laser (Y coordinate)
+  if (laser.futureY() > canvas.height) {
+    laser.y = canvas.height;
+    laser.dy *= -1;
+  } else if (laser.futureY() < 0) {
+    laser.y = 0;
+    laser.dy *= -1;
+  } else {
+    laser.y = laser.futureY();
+  }
+}
 function placeLetter(length, currentIndex, letterLayoutOption) {
   const xBase = canvas.width / length;
   const yBase = canvas.height / length;
