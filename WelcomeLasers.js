@@ -52,30 +52,36 @@ function placeLetter(length, currentIndex, letterLayout) {
       x = xBase + xBase * currentIndex;
       y = yBase + yBase * currentIndex;
       //Keep it off the border
-      if (currentIndex == 0) {
-        y += 25;
-      } else if (currentIndex == length - 1) {
-        x -= 35;
+      if (length > 7) {
+        if (currentIndex == 0) {
+          y += 25;
+        } else if (currentIndex == length - 1) {
+          x -= 35;
+        }
       }
       break;
     case 1: //This orients the letters from bottom left to top right (reverse diagonal)
       x = xBase + xBase * currentIndex;
       y = yBase + yBase * (length - currentIndex);
       //Keep it off the border
-      if (currentIndex == 0) {
-        y -= 55;
-      } else if (currentIndex == length - 1) {
-        x -= 35;
-        y -= 35;
-      } else {
-        y -= 55;
+      if (length > 7) {
+        if (currentIndex == 0) {
+          y -= 55;
+        } else if (currentIndex == length - 1) {
+          x -= 35;
+          y -= 35;
+        } else {
+          y -= 55;
+        }
       }
       break;
     default: //This orients the letters normally, from left to right
       x = xBase + xBase * currentIndex;
       y = canvas.height / 2;
-      if (currentIndex == length - 1) {
-        x -= 35;
+      if (length > 7) {
+        if (currentIndex == length - 1) {
+          x -= 35;
+        }
       }
       break;
   }
@@ -86,9 +92,17 @@ function drawDynamicText() {
   const letterLayout = Math.floor(Math.random() * 3);
   for (let i = 0; i < message.length; i++) {
     const character = message[i];
-    const textMeasurements = ctx.measureText(character);
     const letter = placeLetter(message.length, i, letterLayout);
+
+    const textMeasurements = ctx.measureText(character);
+    letter.yBox = letter.y - textMeasurements.actualBoundingBoxAscent;
+    letter.xBox = letter.x - textMeasurements.actualBoundingBoxLeft;
+
     ctx.fillText(character, letter.x, letter.y);
+
+    ctx.strokeStyle = "red";
+    let height = textMeasurements.actualBoundingBoxAscent;
+    ctx.strokeRect(letter.xBox, letter.yBox, textMeasurements.width, height);
   }
 
   const textMeasurements = ctx.measureText("Welcome!");
