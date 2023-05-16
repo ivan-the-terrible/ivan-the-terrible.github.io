@@ -1,4 +1,5 @@
 import { AttachEvents } from "../util.js";
+import { CollisionType } from "./CollisionTypeEnum.js";
 import { TextDirection } from "./TextDirectionEnum.js";
 
 var boundingBoxDebug = true;
@@ -21,13 +22,13 @@ const ctx = canvas.getContext("2d");
 initCanvas();
 
 function initCanvas() {
-  AttachEvents(window, "resize", adjust);
+  AttachEvents(window, "resize", adjustCanvas);
   canvas.width = originalCanvasWidth;
   canvas.height = window.innerHeight / 2;
   createLetters();
   draw();
 }
-function adjust() {
+function adjustCanvas() {
   //When the window's dimensions change:
   //Set the canvas to the new width.
   const newCanvasWidth = document.getElementById("body").offsetWidth;
@@ -37,6 +38,30 @@ function adjust() {
   //Reset the canvasWidth variable.
   originalCanvasWidth = newCanvasWidth;
   initCanvas();
+}
+function adjustLaser(collisions) {
+  adjustLaserX(collisions.x);
+  adjustLaserY(collisions.y);
+}
+function adjustLaserX(collision) {
+  const hasCollisionOnX = collision[1];
+  if (hasCollisionOnX) {
+    //Change direction
+    laser.dx *= -1;
+    //Reset X coordinate
+    resetLaserDueToCollision(collision);
+  } else {
+    laser.x = laser.futureX();
+  }
+}
+function adjustLaserY(collision) {
+  const hasCollisionOnY = collision[1];
+  if (hasCollisionOnY) {
+    laser.dy *= -1; //Change direction
+    resetLaserDueToCollision(collision);
+  } else {
+    laser.y = laser.futureY();
+  }
 }
 function createLetters() {
   const fontSize = determineFontSize();
@@ -87,7 +112,45 @@ function determineFontSize() {
       return baseSize * 3;
   }
 }
-function determineLaserCollisionX() {}
+function determineLaserCollisions() {
+  return { x: determineCollisionX(), y: determineCollisionY() };
+}
+function determineCollisionX() {
+  const futureX = laser.futureX();
+  let collisions = [];
+
+  switch (true) {
+    case futureX > canvas.width:
+      collisions = [CollisionType.Canvas, CollisionType.Right];
+      break;
+
+    case futureX < 0:
+      collisions = [CollisionType.Canvas, CollisionType.Left];
+      break;
+
+    default:
+      break;
+  }
+  return collisions;
+}
+function determineCollisionY() {
+  const futureY = laser.futureY();
+  let collisions = [];
+
+  switch (true) {
+    case futureY > canvas.height:
+      collisions = [CollisionType.Canvas, CollisionType.Bottom];
+      break;
+
+    case futureY < 0:
+      collisions = [CollisionType.Canvas, CollisionType.Top];
+      break;
+
+    default:
+      break;
+  }
+  return collisions;
+}
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawDynamicText();
@@ -115,26 +178,42 @@ function fireLaserBeam() {
   ctx.strokeStyle = "white";
   ctx.stroke();
 
-  //Bounce Laser (X coordinate)
-  if (laser.futureX() > canvas.width) {
-    laser.x = canvas.width;
-    laser.dx *= -1;
-  } else if (laser.futureX() < 0) {
-    laser.x = 0;
-    laser.dx *= -1;
-  } else {
-    laser.x += laser.dx;
-  }
+  const collisions = determineLaserCollisions();
+  adjustLaser(collisions);
+}
+function laserHitCanvas(side) {
+  console.log(side);
+  switch (side) {
+    case "Right":
+      laser.x = canvas.width;
+      break;
 
-  //Bounce Laser (Y coordinate)
-  if (laser.futureY() > canvas.height) {
-    laser.y = canvas.height;
-    laser.dy *= -1;
-  } else if (laser.futureY() < 0) {
-    laser.y = 0;
-    laser.dy *= -1;
-  } else {
-    laser.y = laser.futureY();
+    case "Left":
+      laser.x = 0;
+      break;
+
+    case "Top":
+      laser.y = 0;
+      break;
+
+    case "Bottom":
+      laser.y = canvas.height;
+      break;
+  }
+}
+function laserHitLetter(side) {
+  switch (side) {
+    case "Right":
+      break;
+
+    case "Left":
+      break;
+
+    case "Top":
+      break;
+
+    case "Bottom":
+      break;
   }
 }
 function placeLetter(length, currentIndex, letterLayoutOption) {
@@ -157,6 +236,7 @@ function placeLetter(length, currentIndex, letterLayoutOption) {
         }
       }
       break;
+
     case "ReverseDiagonal":
       x = xBase + xBase * currentIndex;
       y = yBase + yBase * (length - currentIndex);
@@ -172,6 +252,7 @@ function placeLetter(length, currentIndex, letterLayoutOption) {
         }
       }
       break;
+
     default:
       x = xBase + xBase * currentIndex;
       y = canvas.height / 2;
@@ -183,4 +264,15 @@ function placeLetter(length, currentIndex, letterLayoutOption) {
       break;
   }
   return { x, y };
+}
+function resetLaserDueToCollision(collision) {
+  switch (collision[0]) {
+    case "Canvas":
+      laserHitCanvas(collision[1]);
+      break;
+
+    case "Letter":
+      laserHitLetter(collision[1]);
+      break;
+  }
 }
