@@ -95,28 +95,24 @@ function drawDynamicText() {
     const letter = placeLetter(message.length, i, letterLayout);
 
     const textMeasurements = ctx.measureText(character);
-    letter.yBox = letter.y - textMeasurements.actualBoundingBoxAscent;
+    letter.width = textMeasurements.width;
+    letter.height = textMeasurements.actualBoundingBoxAscent;
+
+    //Box starts in top left of character
+    letter.yBox = letter.y - letter.height;
     letter.xBox = letter.x - textMeasurements.actualBoundingBoxLeft;
 
     ctx.fillText(character, letter.x, letter.y);
 
-    ctx.strokeStyle = "red";
-    let height = textMeasurements.actualBoundingBoxAscent;
-    ctx.strokeRect(letter.xBox, letter.yBox, textMeasurements.width, height);
+    if (boundingBoxDebug) {
+      ctx.strokeStyle = "red";
+      ctx.strokeRect(letter.xBox, letter.yBox, letter.width, letter.height);
+    }
+    letters[i] = letter;
   }
-
-  const textMeasurements = ctx.measureText("Welcome!");
-  console.log(textMeasurements);
   //Holy Guacamole
   //https://stackoverflow.com/questions/1451635/how-to-make-canvas-text-selectable
-  ctx.strokeStyle = "red";
-  let x = canvas.width / 2 - textMeasurements.actualBoundingBoxLeft;
-  let y = canvas.height / 2 - textMeasurements.actualBoundingBoxAscent;
-  let height = textMeasurements.actualBoundingBoxAscent;
-  //ctx.strokeRect(x, y, textMeasurements.width, height);
-
-  const w = {};
-  console.log({ x, y, height });
+  console.log(letters);
 }
 function welcomeLasers() {
   const fontSize = determineFontSize();
