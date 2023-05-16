@@ -1,7 +1,8 @@
 function initCanvas() {
   canvas.width = originalCanvasWidth;
   canvas.height = window.innerHeight / 2;
-  welcomeLasers();
+  createLetters();
+  window.requestAnimationFrame(draw);
 }
 function adjust() {
   //When the window's dimensions change:
@@ -16,6 +17,24 @@ function adjust() {
 }
 function AttachEvents(element, type, handler) {
   element.addEventListener(type, handler);
+}
+function createLetters() {
+  const message = "Welcome!";
+  const letterLayoutOption = Math.floor(Math.random() * 3);
+
+  for (let i = 0; i < message.length; i++) {
+    const character = message[i];
+    const letter = placeLetter(message.length, i, letterLayoutOption);
+
+    const textMeasurements = ctx.measureText(character);
+    letter.width = textMeasurements.width;
+    letter.height = textMeasurements.actualBoundingBoxAscent;
+    //Box starts in top left of character
+    letter.yBox = letter.y - letter.height;
+    letter.xBox = letter.x - textMeasurements.actualBoundingBoxLeft;
+
+    letters[i] = letter;
+  }
 }
 function determineFontSize() {
   //Following Bootstrap's criteria for response breakpoints
@@ -40,14 +59,39 @@ function determineFontSize() {
       return baseSize * 3;
   }
 }
-function placeLetter(length, currentIndex, letterLayout) {
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawDynamicText();
+  fireLaserBeam();
+  window.requestAnimationFrame(draw);
+}
+function drawDynamicText() {
+  const fontSize = determineFontSize();
+  ctx.font = fontSize + "px Helvetica";
+  ctx.textAlign = "center";
+  ctx.fillStyle = "white";
+
+  for (let i = 0; i < letters.length; i++) {
+    const character = letters[i];
+    ctx.fillText(character, letter.x, letter.y);
+
+    if (boundingBoxDebug) {
+      ctx.strokeStyle = "red";
+      ctx.strokeRect(letter.xBox, letter.yBox, letter.width, letter.height);
+    }
+  }
+  //Holy Guacamole
+  //https://stackoverflow.com/questions/1451635/how-to-make-canvas-text-selectable
+}
+function fireLaserBeam() {}
+function placeLetter(length, currentIndex, letterLayoutOption) {
   const xBase = canvas.width / length;
   const yBase = canvas.height / length;
 
   let x;
   let y;
   //TODO: Maybe I put in a case that pops the letters up and down from the middle
-  switch (letterLayout) {
+  switch (letterLayoutOption) {
     case 0: //This is orients the letters diagonally
       x = xBase + xBase * currentIndex;
       y = yBase + yBase * currentIndex;
@@ -86,38 +130,4 @@ function placeLetter(length, currentIndex, letterLayout) {
       break;
   }
   return { x, y };
-}
-function drawDynamicText() {
-  const message = "Welcome!";
-  const letterLayout = Math.floor(Math.random() * 3);
-  for (let i = 0; i < message.length; i++) {
-    const character = message[i];
-    const letter = placeLetter(message.length, i, letterLayout);
-
-    const textMeasurements = ctx.measureText(character);
-    letter.width = textMeasurements.width;
-    letter.height = textMeasurements.actualBoundingBoxAscent;
-
-    //Box starts in top left of character
-    letter.yBox = letter.y - letter.height;
-    letter.xBox = letter.x - textMeasurements.actualBoundingBoxLeft;
-
-    ctx.fillText(character, letter.x, letter.y);
-
-    if (boundingBoxDebug) {
-      ctx.strokeStyle = "red";
-      ctx.strokeRect(letter.xBox, letter.yBox, letter.width, letter.height);
-    }
-    letters[i] = letter;
-  }
-  //Holy Guacamole
-  //https://stackoverflow.com/questions/1451635/how-to-make-canvas-text-selectable
-  console.log(letters);
-}
-function welcomeLasers() {
-  const fontSize = determineFontSize();
-  ctx.font = fontSize + "px Helvetica";
-  ctx.textAlign = "center";
-  ctx.fillStyle = "white";
-  drawDynamicText();
 }
