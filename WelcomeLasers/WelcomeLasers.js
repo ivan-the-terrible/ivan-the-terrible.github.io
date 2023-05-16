@@ -2,7 +2,7 @@ import { AttachEvents } from "../util.js";
 import { CollisionType } from "./CollisionTypeEnum.js";
 import { TextDirection } from "./TextDirectionEnum.js";
 
-var boundingBoxDebug = true;
+var boundingBoxDebug = false;
 var letters = [];
 var laser = {
   x: 0,
