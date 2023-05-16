@@ -294,9 +294,8 @@ function test() {
     isLaserTouchingBox = isLaserTouchingBoxOnX && isLaserTouchingBoxOnY;
     if (isLaserTouchingBox) {
       indexToRemove = i;
-
-      if (isLaserTouchingBoxOnX) laser.dx *= -1;
-      if (isLaserTouchingBoxOnY) laser.dy *= -1;
+      laser.dx *= -1;
+      laser.dy *= -1;
       break;
     }
   }
