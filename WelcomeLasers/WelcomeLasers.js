@@ -70,9 +70,11 @@ function createLetters() {
   ctx.textAlign = "center";
   ctx.fillStyle = "white";
 
-  const message = "Welcome!";
-  const randomLayout = Math.floor(Math.random() * 3);
-  const letterLayoutOption = TextDirection[randomLayout];
+  const random = Math.floor(Math.random() * 3);
+
+  const messageList = ["Welcome!", "Terrible", "Pong?"];
+  const message = messageList[random];
+  const letterLayoutOption = TextDirection[random];
 
   for (let i = 0; i < message.length; i++) {
     const character = message[i];
@@ -228,12 +230,10 @@ function placeLetter(length, currentIndex, letterLayoutOption) {
       x = xBase + xBase * currentIndex;
       y = yBase + yBase * currentIndex;
       //Keep it off the border
-      if (length > 7) {
-        if (currentIndex == 0) {
-          y += 25;
-        } else if (currentIndex == length - 1) {
-          x -= 35;
-        }
+      if (currentIndex == 0) {
+        y += 25;
+      } else if (currentIndex == length - 1) {
+        x -= 35;
       }
       break;
 
@@ -241,25 +241,25 @@ function placeLetter(length, currentIndex, letterLayoutOption) {
       x = xBase + xBase * currentIndex;
       y = yBase + yBase * (length - currentIndex);
       //Keep it off the border
-      if (length > 7) {
-        if (currentIndex == 0) {
+      if (currentIndex == 0) {
+        if (length > 6) {
           y -= 65;
-        } else if (currentIndex == length - 1) {
-          x -= 35;
-          y -= 35;
         } else {
-          y -= 55;
+          y -= 100;
         }
+      } else if (currentIndex == length - 1) {
+        x -= 35;
+        y -= 35;
+      } else {
+        y -= 55;
       }
       break;
 
     default:
       x = xBase + xBase * currentIndex;
       y = canvas.height / 2;
-      if (length > 7) {
-        if (currentIndex == length - 1) {
-          x -= 35;
-        }
+      if (currentIndex == length - 1) {
+        x -= 35;
       }
       break;
   }
