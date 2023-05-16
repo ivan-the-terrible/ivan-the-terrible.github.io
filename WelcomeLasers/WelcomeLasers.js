@@ -1,4 +1,5 @@
 import { AttachEvents } from "../util.js";
+import { TextDirection } from "./TextDirectionEnum.js";
 
 var boundingBoxDebug = true;
 var letters = [];
@@ -45,7 +46,8 @@ function createLetters() {
   ctx.fillStyle = "white";
 
   const message = "Welcome!";
-  const letterLayoutOption = Math.floor(Math.random() * 3);
+  const randomLayout = Math.floor(Math.random() * 3);
+  const letterLayoutOption = TextDirection[randomLayout];
 
   for (let i = 0; i < message.length; i++) {
     const character = message[i];
@@ -143,7 +145,7 @@ function placeLetter(length, currentIndex, letterLayoutOption) {
   let y;
   //TODO: Maybe I put in a case that pops the letters up and down from the middle
   switch (letterLayoutOption) {
-    case 0: //This is orients the letters diagonally
+    case "Diagonal":
       x = xBase + xBase * currentIndex;
       y = yBase + yBase * currentIndex;
       //Keep it off the border
@@ -155,7 +157,7 @@ function placeLetter(length, currentIndex, letterLayoutOption) {
         }
       }
       break;
-    case 1: //This orients the letters from bottom left to top right (reverse diagonal)
+    case "ReverseDiagonal":
       x = xBase + xBase * currentIndex;
       y = yBase + yBase * (length - currentIndex);
       //Keep it off the border
@@ -170,7 +172,7 @@ function placeLetter(length, currentIndex, letterLayoutOption) {
         }
       }
       break;
-    default: //This orients the letters normally, from left to right
+    default:
       x = xBase + xBase * currentIndex;
       y = canvas.height / 2;
       if (length > 7) {
