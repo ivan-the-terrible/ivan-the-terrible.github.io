@@ -251,7 +251,7 @@ function moveLaserFromCanvas(side) {
   }
 }
 function laserHitLetter(collision) {
-  //For right now, but TODO update dx,dy appropriately
+  //TODO update dx,dy appropriately
   laser.dx *= -1;
   laser.dy *= -1;
   switch (collision.side) {
