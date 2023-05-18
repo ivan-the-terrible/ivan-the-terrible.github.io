@@ -88,6 +88,14 @@ function createLetters() {
     letter.yBox = letter.y - letter.height;
     letter.xBox = letter.x - textMeasurements.actualBoundingBoxLeft;
 
+    letter.centerX = function centerX() {
+      this.x - this.width / 2;
+    };
+
+    letter.centerY = function centerY() {
+      this.y - this.height / 2;
+    };
+
     letters[i] = letter;
   }
 }
@@ -115,10 +123,34 @@ function determineFontSize() {
   }
 }
 function determineLaserCollisions() {
-  test();
-  return { x: determineCollisionX(), y: determineCollisionY() };
+  determineLetterCollision();
+  return { x: determineCanvasCollisionX(), y: determineCanvasCollisionY() };
 }
-function determineCollisionX() {
+function determineLetterCollision() {
+  let indexToRemove;
+  let isLaserTouchingBox;
+  for (let i = 0; i < letters.length; i++) {
+    const letter = letters[i];
+    const letterXBoundary = letter.xBox + letter.width;
+    const letterYBoundary = letter.yBox + letter.height;
+
+    const isLaserTouchingBoxOnX =
+      laser.x >= letter.xBox && laser.x <= letterXBoundary;
+
+    const isLaserTouchingBoxOnY =
+      laser.y >= letter.yBox && laser.y <= letterYBoundary;
+
+    isLaserTouchingBox = isLaserTouchingBoxOnX && isLaserTouchingBoxOnY;
+    if (isLaserTouchingBox) {
+      indexToRemove = i;
+      laser.dx *= -1;
+      laser.dy *= -1;
+      break;
+    }
+  }
+  if (isLaserTouchingBox) letters.splice(indexToRemove, 1);
+}
+function determineCanvasCollisionX() {
   const futureX = laser.futureX();
   let collisions = [];
 
@@ -136,7 +168,7 @@ function determineCollisionX() {
   }
   return collisions;
 }
-function determineCollisionY() {
+function determineCanvasCollisionY() {
   const futureY = laser.futureY();
   let collisions = [];
 
@@ -275,29 +307,4 @@ function resetLaserDueToCollision(collision) {
       laserHitLetter(collision[1]);
       break;
   }
-}
-
-function test() {
-  let indexToRemove;
-  let isLaserTouchingBox;
-  for (let i = 0; i < letters.length; i++) {
-    const letter = letters[i];
-    const letterXBoundary = letter.xBox + letter.width;
-    const letterYBoundary = letter.yBox + letter.height;
-
-    const isLaserTouchingBoxOnX =
-      laser.x >= letter.xBox && laser.x <= letterXBoundary;
-
-    const isLaserTouchingBoxOnY =
-      laser.y >= letter.yBox && laser.y <= letterYBoundary;
-
-    isLaserTouchingBox = isLaserTouchingBoxOnX && isLaserTouchingBoxOnY;
-    if (isLaserTouchingBox) {
-      indexToRemove = i;
-      laser.dx *= -1;
-      laser.dy *= -1;
-      break;
-    }
-  }
-  if (isLaserTouchingBox) letters.splice(indexToRemove, 1);
 }
