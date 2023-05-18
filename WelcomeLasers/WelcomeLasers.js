@@ -39,28 +39,16 @@ function adjustCanvas() {
   originalCanvasWidth = newCanvasWidth;
   initCanvas();
 }
-function adjustLaser(collisions) {
-  adjustLaserX(collisions.x);
-  adjustLaserY(collisions.y);
-}
-function adjustLaserX(collision) {
-  const hasCollisionOnX = collision[1];
-  if (hasCollisionOnX) {
-    //Change direction
-    laser.dx *= -1;
-    //Reset X coordinate
-    resetLaserDueToCollision(collision);
-  } else {
-    laser.x = laser.futureX();
-  }
-}
-function adjustLaserY(collision) {
-  const hasCollisionOnY = collision[1];
-  if (hasCollisionOnY) {
-    laser.dy *= -1; //Change direction
-    resetLaserDueToCollision(collision);
-  } else {
-    laser.y = laser.futureY();
+function bounceLaser(collision) {
+  switch (collision.type) {
+    case "Canvas":
+      moveLaserFromCanvas(collision.xSide);
+      moveLaserFromCanvas(collision.ySide);
+      break;
+
+    case "Letter":
+      laserHitLetter(collision);
+      break;
   }
 }
 function createLetters() {
@@ -123,68 +111,46 @@ function determineFontSize() {
   }
 }
 function determineLaserCollisions() {
-  determineLetterCollision();
-  return { x: determineCanvasCollisionX(), y: determineCanvasCollisionY() };
+  let collision = {};
+
+  const letterCollision = findLetterCollision();
+  if (Object.keys(letterCollision).length != 0) collision = letterCollision;
+
+  const canvasCollision = findCanvasCollision();
+  if (Object.keys(canvasCollision).length != 0) collision = canvasCollision;
+
+  return collision;
 }
-function determineLetterCollision() {
-  let indexToRemove;
-  let isLaserTouchingBox;
-  for (let i = 0; i < letters.length; i++) {
-    const letter = letters[i];
-    const letterXBoundary = letter.xBox + letter.width;
-    const letterYBoundary = letter.yBox + letter.height;
-
-    const isLaserTouchingBoxOnX =
-      laser.x >= letter.xBox && laser.x <= letterXBoundary;
-
-    const isLaserTouchingBoxOnY =
-      laser.y >= letter.yBox && laser.y <= letterYBoundary;
-
-    isLaserTouchingBox = isLaserTouchingBoxOnX && isLaserTouchingBoxOnY;
-    if (isLaserTouchingBox) {
-      indexToRemove = i;
-      laser.dx *= -1;
-      laser.dy *= -1;
-      break;
-    }
-  }
-  if (isLaserTouchingBox) letters.splice(indexToRemove, 1);
+function determineLetterSideCollision() {
+  return CollisionType.Bottom; //TODO
 }
 function determineCanvasCollisionX() {
   const futureX = laser.futureX();
-  let collisions = [];
 
   switch (true) {
     case futureX > canvas.width:
-      collisions = [CollisionType.Canvas, CollisionType.Right];
-      break;
+      return CollisionType.Right;
 
     case futureX < 0:
-      collisions = [CollisionType.Canvas, CollisionType.Left];
-      break;
+      return CollisionType.Left;
 
     default:
-      break;
+      return "";
   }
-  return collisions;
 }
 function determineCanvasCollisionY() {
   const futureY = laser.futureY();
-  let collisions = [];
 
   switch (true) {
     case futureY > canvas.height:
-      collisions = [CollisionType.Canvas, CollisionType.Bottom];
-      break;
+      return CollisionType.Bottom;
 
     case futureY < 0:
-      collisions = [CollisionType.Canvas, CollisionType.Top];
-      break;
+      return CollisionType.Top;
 
     default:
-      break;
+      return "";
   }
-  return collisions;
 }
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -205,6 +171,46 @@ function drawDynamicText() {
   //Holy Guacamole
   //https://stackoverflow.com/questions/1451635/how-to-make-canvas-text-selectable
 }
+function findCanvasCollision() {
+  const xSide = determineCanvasCollisionX();
+  const ySide = determineCanvasCollisionY();
+  if (xSide || ySide) {
+    return {
+      type: CollisionType.Canvas,
+      xSide: xSide,
+      ySide: ySide,
+    };
+  } else {
+    return {};
+  }
+}
+function findLetterCollision() {
+  let indexToRemove;
+  let isLaserTouchingBox;
+  for (let i = 0; i < letters.length; i++) {
+    const letter = letters[i];
+    const letterXBoundary = letter.xBox + letter.width;
+    const letterYBoundary = letter.yBox + letter.height;
+
+    const isLaserTouchingBoxOnX =
+      laser.x >= letter.xBox && laser.x <= letterXBoundary;
+
+    const isLaserTouchingBoxOnY =
+      laser.y >= letter.yBox && laser.y <= letterYBoundary;
+
+    isLaserTouchingBox = isLaserTouchingBoxOnX && isLaserTouchingBoxOnY;
+    if (isLaserTouchingBox) {
+      indexToRemove = i;
+      const letterSide = determineLetterSideCollision();
+      return {
+        type: CollisionType.Letter,
+        side: letterSide,
+        letterIndex: indexToRemove,
+      };
+    }
+  }
+  return {};
+}
 function fireLaserBeam() {
   ctx.beginPath();
   ctx.moveTo(laser.x, laser.y);
@@ -213,30 +219,42 @@ function fireLaserBeam() {
   ctx.strokeStyle = "white";
   ctx.stroke();
 
-  const collisions = determineLaserCollisions();
-  adjustLaser(collisions);
+  const collision = determineLaserCollisions();
+  if (Object.keys(collision).length > 0) {
+    bounceLaser(collision);
+  } else {
+    laser.x = laser.futureX();
+    laser.y = laser.futureY();
+  }
 }
-function laserHitCanvas(side) {
+function moveLaserFromCanvas(side) {
   switch (side) {
     case "Right":
+      laser.dx *= -1;
       laser.x = canvas.width;
       break;
 
     case "Left":
+      laser.dx *= -1;
       laser.x = 0;
       break;
 
     case "Top":
+      laser.dy *= -1;
       laser.y = 0;
       break;
 
     case "Bottom":
+      laser.dy *= -1;
       laser.y = canvas.height;
       break;
   }
 }
-function laserHitLetter(side) {
-  switch (side) {
+function laserHitLetter(collision) {
+  //For right now, but TODO update dx,dy appropriately
+  laser.dx *= -1;
+  laser.dy *= -1;
+  switch (collision.side) {
     case "Right":
       break;
 
@@ -249,6 +267,7 @@ function laserHitLetter(side) {
     case "Bottom":
       break;
   }
+  letters.splice(collision.letterIndex, 1);
 }
 function placeLetter(length, currentIndex, letterLayoutOption) {
   const xBase = canvas.width / length;
@@ -296,15 +315,4 @@ function placeLetter(length, currentIndex, letterLayoutOption) {
       break;
   }
   return { x, y };
-}
-function resetLaserDueToCollision(collision) {
-  switch (collision[0]) {
-    case "Canvas":
-      laserHitCanvas(collision[1]);
-      break;
-
-    case "Letter":
-      laserHitLetter(collision[1]);
-      break;
-  }
 }
