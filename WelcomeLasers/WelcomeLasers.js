@@ -1,21 +1,11 @@
 import { AttachEvents } from "../util.js";
 import { CollisionType } from "./CollisionTypeEnum.js";
 import { createLetters } from "./Letters.js";
+import { Laser } from "./Laser.js";
 
 var boundingBoxDebug = false;
 var letters = [];
-var laser = {
-  x: 0,
-  y: 0,
-  dx: 5,
-  dy: 5,
-  futureX() {
-    return this.x + this.dx;
-  },
-  futureY() {
-    return this.y + this.dy;
-  },
-};
+var laser = new Laser();
 var originalCanvasWidth = document.getElementById("body").offsetWidth;
 const canvas = document.getElementById("welcome-lasers");
 const ctx = canvas.getContext("2d");
