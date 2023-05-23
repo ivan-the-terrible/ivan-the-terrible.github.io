@@ -1,9 +1,12 @@
 export function AttachEvents(element, type, handler) {
   element.addEventListener(type, handler);
 }
-
-export function DetermineFontSize() {
-  //Following Bootstrap's criteria for response breakpoints
+/**
+ * Following Bootstrap's criteria for response breakpoints, we determine font size.
+ * @param {HTMLElement} canvas
+ * @returns {Number} a font size
+ */
+export function DetermineFontSize(canvas) {
   const IsExtraSmall = screenSize => screenSize < 576;
   const IsSmall = screenSize => screenSize >= 576 && screenSize < 768;
   const IsMedium = screenSize => screenSize >= 768 && screenSize < 992;
