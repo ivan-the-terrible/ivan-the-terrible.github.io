@@ -1,3 +1,7 @@
+/**
+ * @readonly
+ * @enum {string}
+ */
 const TextDirection = {};
 
 TextDirection[(TextDirection[0] = "LeftToRight")] = 0;

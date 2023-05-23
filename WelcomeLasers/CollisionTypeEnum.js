@@ -1,3 +1,7 @@
+/**
+ * @readonly
+ * @enum {string}
+ */
 const CollisionType = {
   Canvas: "Canvas",
   Letter: "Letter",
