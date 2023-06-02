@@ -10,7 +10,7 @@ import { Letter } from "./Letter.js";
  * @returns {Array} An array of letters with letter objects per index
  */
 export function createLetters(canvas, ctx) {
-  const fontSize = DetermineFontSize(canvas);
+  const fontSize = DetermineFontSize(canvas.width);
   //Need to set font size so 'measureText' has accurate sizing
   ctx.font = fontSize + "px Helvetica";
   ctx.textAlign = "center";
@@ -19,7 +19,8 @@ export function createLetters(canvas, ctx) {
   const random = Math.floor(Math.random() * 3);
 
   const messageList = ["Welcome!", "Terrible", "Pong?"];
-  const message = messageList[random];
+  //const message = messageList[random];
+  const message = "O";
   const letterLayoutOption = TextDirection[random];
 
   const letters = [];
@@ -38,4 +39,66 @@ export function createLetters(canvas, ctx) {
     letters[i] = letter;
   }
   return letters;
+}
+
+/**
+ * The last letter will run away to avoid the laser
+ * @param {Letter} letter
+ * @param {Corners} corners
+ */
+export function lastLetterChase(letter, corners) {
+  //Set randomness to make letter run away to:
+  // Opposite diagonal corner
+
+  const furthestCorner = determineFarthestCorner(letter, corners);
+  return furthestCorner;
+}
+
+function determineFarthestCorner(letter, corners) {
+  const diffCanvasX = letter.x - corners.BottomRight.x;
+  const diffCanvasY = letter.y - corners.BottomRight.y;
+  //Distance of letter to origin are its own coordinates
+  // letter.x - 0
+
+  const squaredCanvasX = diffCanvasX * diffCanvasX;
+  const squaredCanvasY = diffCanvasY * diffCanvasY;
+  const squaredOriginX = letter.x * letter.x;
+  const squaredOriginY = letter.y * letter.y;
+
+  const bottomRightRadicand = squaredCanvasX + squaredCanvasY;
+  const topLeftRadicand = squaredOriginX + squaredOriginY;
+
+  const bottomLeftRadicand = squaredOriginX + squaredCanvasY;
+  const topRightRadicand = squaredCanvasX + squaredOriginY;
+
+  const distanceToBottomRightCorner = Math.sqrt(bottomRightRadicand);
+  const distanceToTopLeftCorner = Math.sqrt(topLeftRadicand);
+  const distanceToBottomLeftCorner = Math.sqrt(bottomLeftRadicand);
+  const distanceToTopRight = Math.sqrt(topRightRadicand);
+
+  const distances = [
+    distanceToTopLeftCorner,
+    distanceToTopRight,
+    distanceToBottomRightCorner,
+    distanceToBottomLeftCorner,
+  ];
+  const greatestDistance = Math.max(...distances);
+  const farthestCorner = distances.indexOf(greatestDistance);
+
+  switch (farthestCorner) {
+    case 0:
+      return corners.TopLeft;
+
+    case 1:
+      return corners.TopRight;
+
+    case 2:
+      return corners.BottomRight;
+
+    case 3:
+      return corners.BottomLeft;
+
+    default:
+      break;
+  }
 }

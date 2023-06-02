@@ -1,6 +1,7 @@
 import { AttachEvents } from "../util.js";
 import { CollisionType } from "./CollisionTypeEnum.js";
-import { createLetters } from "./Letters.js";
+import { Corners } from "./Corners.js";
+import { createLetters, lastLetterChase } from "./Letters.js";
 import { Laser } from "./Laser.js";
 
 var boundingBoxDebug = false;
@@ -9,12 +10,14 @@ var laser = new Laser();
 var originalCanvasWidth = document.getElementById("body").offsetWidth;
 const canvas = document.getElementById("welcome-lasers");
 const ctx = canvas.getContext("2d");
+var corners;
 initCanvas();
 
 function initCanvas() {
   AttachEvents(window, "resize", adjustCanvas);
   canvas.width = originalCanvasWidth;
   canvas.height = window.innerHeight / 2;
+  corners = new Corners(canvas);
   letters = createLetters(canvas, ctx);
   draw();
 }
@@ -90,6 +93,11 @@ function draw() {
   window.requestAnimationFrame(draw);
 }
 function drawDynamicText() {
+  if (letters.length == 1) {
+    lastLetterChase(letters[0], corners);
+    //return;
+  }
+
   for (let i = 0; i < letters.length; i++) {
     const letter = letters[i];
     ctx.fillText(letter.character, letter.x, letter.y);
