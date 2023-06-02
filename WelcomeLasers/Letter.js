@@ -98,22 +98,40 @@ export class Letter {
     return this.y - this.height;
   }
   futureX() {
-    return this.x + this.dx;
+    /*
+      To calculate the bounds, it's directional:
+      - If we are going left (dx is -1), we check xBox + dx
+      - If we are going right (dx is 1), we check (xBox + width) + dx
+      Same goes for up and down
+    */
+    const sum = this.xBox + this.dx;
+    if (Math.sign(this.dx) == 1) return sum + this.width;
+    return sum;
   }
   futureY() {
-    return this.y + this.dy;
+    const sum = this.yBox + this.dy;
+    if (Math.sign(this.dy) == 1) return sum + this.height;
+    return sum;
+  }
+  futureXBox() {
+    return this.xBox + this.dx;
+  }
+  futureYBox() {
+    return this.yBox + this.dy;
   }
   moveX() {
-    this.x = this.futureX();
+    this.xBox = this.futureXBox();
+    this.x = this.getX();
   }
   moveY() {
-    this.y = this.futureY();
+    this.yBox = this.futureYBox();
+    this.y = this.getY();
   }
   moveLetterFromCanvas(side, canvas) {
     switch (side) {
       case "Right":
         this.dx *= -1;
-        this.xBox = canvas.width;
+        this.xBox = canvas.width - this.width;
         this.x = this.getX();
         break;
 
@@ -131,7 +149,7 @@ export class Letter {
 
       case "Bottom":
         this.dy *= -1;
-        this.yBox = canvas.height;
+        this.yBox = canvas.height - this.height;
         this.y = this.getY();
         break;
     }
