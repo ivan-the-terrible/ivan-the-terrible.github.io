@@ -93,10 +93,10 @@ function draw() {
   window.requestAnimationFrame(draw);
 }
 function drawDynamicText() {
-  if (letters.length == 1) {
-    lastLetterChase(letters[0], corners);
-    //return;
-  }
+  // if (letters.length == 1) {
+  //   const movingLetter = lastLetterChase(letters[0], corners);
+  //   letters = [movingLetter];
+  // }
 
   for (let i = 0; i < letters.length; i++) {
     const letter = letters[i];
@@ -162,8 +162,8 @@ function fireLaserBeam() {
   if (Object.keys(collision).length > 0) {
     bounceLaser(collision);
   } else {
-    laser.x = laser.futureX();
-    laser.y = laser.futureY();
+    laser.moveX();
+    laser.moveY();
   }
 }
 function moveLaserFromCanvas(side) {
