@@ -8,6 +8,7 @@ export class Letter {
   yBox;
   dx;
   dy;
+  actualBoundingBoxLeft;
   constructor(
     canvas,
     ctx,
@@ -22,8 +23,10 @@ export class Letter {
     const textMeasurements = ctx.measureText(character);
     this.width = textMeasurements.width;
     this.height = textMeasurements.actualBoundingBoxAscent;
-    this.yBox = this.y - this.height;
-    this.xBox = this.x - textMeasurements.actualBoundingBoxLeft;
+    this.actualBoundingBoxLeft = textMeasurements.actualBoundingBoxLeft;
+
+    this.xBox = this.getXBox();
+    this.yBox = this.getYBox();
   }
   /**
    * Based on the letterLayoutOption provided,
@@ -82,6 +85,18 @@ export class Letter {
       }
     }
   }
+  getX() {
+    return this.xBox + this.actualBoundingBoxLeft;
+  }
+  getY() {
+    return this.yBox + this.height;
+  }
+  getXBox() {
+    return this.x - this.actualBoundingBoxLeft;
+  }
+  getYBox() {
+    return this.y - this.height;
+  }
   futureX() {
     return this.x + this.dx;
   }
@@ -93,5 +108,32 @@ export class Letter {
   }
   moveY() {
     this.y = this.futureY();
+  }
+  moveLetterFromCanvas(side, canvas) {
+    switch (side) {
+      case "Right":
+        this.dx *= -1;
+        this.xBox = canvas.width;
+        this.x = this.getX();
+        break;
+
+      case "Left":
+        this.dx *= -1;
+        this.xBox = 0;
+        this.x = this.getX();
+        break;
+
+      case "Top":
+        this.dy *= -1;
+        this.yBox = 0;
+        this.y = this.getY();
+        break;
+
+      case "Bottom":
+        this.dy *= -1;
+        this.yBox = canvas.height;
+        this.y = this.getY();
+        break;
+    }
   }
 }
