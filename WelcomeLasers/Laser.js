@@ -1,3 +1,7 @@
+/**
+ * A Laser has (x, y) coordinates and velocity (dx, dy).
+ * The futureX() and futureY() determine the location plus velocity.
+ */
 export class Laser {
   x = 0;
   y = 0;
