@@ -1,6 +1,7 @@
 import { TextDirection } from "./TextDirectionEnum.js";
 import { DetermineFontSize } from "../util.js";
 import { Letter } from "./Letter.js";
+import { findCanvasCollision } from "./CanvasCollisions.js";
 
 /**
  * Based on current screen size,
@@ -44,11 +45,21 @@ export function createLetters(canvas, ctx) {
 /**
  * The last letter will run away to avoid the laser
  * @param {Letter} letter
+ * @param {HTMLElement} canvas
  * @param {Corners} corners
  */
-export function lastLetterChase(letter, corners) {
+export function lastLetterChase(letter, canvas, corners) {
   if (letter.dy == null) {
     makeLetterMove(letter, corners);
+  }
+  const canvasCollision = findCanvasCollision(
+    letter,
+    canvas.width,
+    canvas.height
+  );
+  if (Object.keys(canvasCollision).length != 0) {
+    letter.moveLetterFromCanvas(canvasCollision.xSide, canvas);
+    letter.moveLetterFromCanvas(canvasCollision.ySide, canvas);
   }
   letter.moveX();
   letter.moveY();
@@ -110,6 +121,11 @@ function determineFarthestCorner(letter, corners) {
   }
 }
 
+/**
+ * Give the letter velocity (dx,dy) based on the corners
+ * @param {Letter} letter
+ * @param {Corner} corners
+ */
 function makeLetterMove(letter, corners) {
   const farthestCorner = determineFarthestCorner(letter, corners);
   letter.dx = 5;
