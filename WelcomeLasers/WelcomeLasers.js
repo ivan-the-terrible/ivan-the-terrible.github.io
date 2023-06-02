@@ -1,4 +1,5 @@
 import { AttachEvents } from "../util.js";
+import { findCanvasCollision } from "./CanvasCollisions.js";
 import { CollisionType } from "./CollisionTypeEnum.js";
 import { Corners } from "./Corners.js";
 import { createLetters, lastLetterChase } from "./Letters.js";
@@ -50,41 +51,17 @@ function determineLaserCollisions() {
   const letterCollision = findLetterCollision();
   if (Object.keys(letterCollision).length != 0) collision = letterCollision;
 
-  const canvasCollision = findCanvasCollision(laser);
+  const canvasCollision = findCanvasCollision(
+    laser,
+    canvas.width,
+    canvas.height
+  );
   if (Object.keys(canvasCollision).length != 0) collision = canvasCollision;
 
   return collision;
 }
 function determineLetterSideCollision() {
   return CollisionType.Bottom; //TODO
-}
-function determineCanvasCollisionX(movingObject) {
-  const futureX = movingObject.futureX();
-
-  switch (true) {
-    case futureX > canvas.width:
-      return CollisionType.Right;
-
-    case futureX < 0:
-      return CollisionType.Left;
-
-    default:
-      return "";
-  }
-}
-function determineCanvasCollisionY(movingObject) {
-  const futureY = movingObject.futureY();
-
-  switch (true) {
-    case futureY > canvas.height:
-      return CollisionType.Bottom;
-
-    case futureY < 0:
-      return CollisionType.Top;
-
-    default:
-      return "";
-  }
 }
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -94,7 +71,7 @@ function draw() {
 }
 function drawDynamicText() {
   if (letters.length == 1) {
-    lastLetterChase(letters[0], corners);
+    lastLetterChase(letters[0], canvas, corners);
   }
 
   for (let i = 0; i < letters.length; i++) {
@@ -108,19 +85,6 @@ function drawDynamicText() {
   }
   //Holy Guacamole
   //https://stackoverflow.com/questions/1451635/how-to-make-canvas-text-selectable
-}
-function findCanvasCollision(movingObject) {
-  const xSide = determineCanvasCollisionX(movingObject);
-  const ySide = determineCanvasCollisionY(movingObject);
-  if (xSide || ySide) {
-    return {
-      type: CollisionType.Canvas,
-      xSide: xSide,
-      ySide: ySide,
-    };
-  } else {
-    return {};
-  }
 }
 function findLetterCollision() {
   let indexToRemove;
@@ -191,6 +155,10 @@ function moveLaserFromCanvas(side) {
 function laserHitLetter(collision) {
   laser.dx *= -1;
   laser.dy *= -1;
+  /*
+   I originally had some intentions to change the laser's direction
+   in a more sophisticated way so the collision.side is irrelevant now
+  */
   switch (collision.side) {
     case "Right":
       break;
