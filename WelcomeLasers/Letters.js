@@ -45,20 +45,24 @@ export function createLetters(canvas, ctx) {
  * The last letter will run away to avoid the laser
  * @param {Letter} letter
  * @param {Corners} corners
+ * @returns {Letter} letter that has velocity and new coordinates
  */
 export function lastLetterChase(letter, corners) {
   //Set randomness to make letter run away to:
   // Opposite diagonal corner
 
-  const furthestCorner = determineFarthestCorner(letter, corners);
-  return furthestCorner;
+  if (letter.dy == null) {
+    return newMovingLetter(letter, corners);
+  } else {
+    //Update X and Y of letter
+  }
 }
 
 /**
  *
  * @param {Letter} letter
  * @param {Corner} corners
- * @returns {x, y} object that corresponds to the farthest corner
+ * @returns object with {x, y} that corresponds to the farthest corner
  */
 function determineFarthestCorner(letter, corners) {
   const diffCanvasX = letter.x - corners.BottomRight.x;
@@ -108,4 +112,13 @@ function determineFarthestCorner(letter, corners) {
     default:
       break;
   }
+}
+
+function newMovingLetter(letter, corners) {
+  const furthestCorner = determineFarthestCorner(letter, corners);
+  const movingLetter = letter; //Do i really need to make a copy? I guess it's cleaner
+
+  //dx/dy should be positive/negative based on what direction it needs to go in
+  movingLetter.dx = 5;
+  return movingLetter;
 }

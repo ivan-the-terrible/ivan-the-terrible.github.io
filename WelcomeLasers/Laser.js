@@ -13,4 +13,10 @@ export class Laser {
   futureY() {
     return this.y + this.dy;
   }
+  moveX() {
+    this.x = this.futureX();
+  }
+  moveY() {
+    this.y = this.futureY();
+  }
 }
