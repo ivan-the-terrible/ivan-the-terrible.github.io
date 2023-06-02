@@ -6,6 +6,8 @@ export class Letter {
   y;
   xBox;
   yBox;
+  dx = 5;
+  dy = 5;
   constructor(
     canvas,
     ctx,
@@ -74,5 +76,17 @@ export class Letter {
         }
         break;
     }
+  }
+  futureX() {
+    return this.x + this.dx;
+  }
+  futureY() {
+    return this.y + this.dy;
+  }
+  moveX() {
+    this.x = futureX();
+  }
+  moveY() {
+    this.y = this.futureY();
   }
 }
