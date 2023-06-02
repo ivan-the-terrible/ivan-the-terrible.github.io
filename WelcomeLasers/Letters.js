@@ -54,6 +54,12 @@ export function lastLetterChase(letter, corners) {
   return furthestCorner;
 }
 
+/**
+ *
+ * @param {Letter} letter
+ * @param {Corner} corners
+ * @returns {x, y} object that corresponds to the farthest corner
+ */
 function determineFarthestCorner(letter, corners) {
   const diffCanvasX = letter.x - corners.BottomRight.x;
   const diffCanvasY = letter.y - corners.BottomRight.y;
@@ -66,14 +72,15 @@ function determineFarthestCorner(letter, corners) {
   const squaredOriginY = letter.y * letter.y;
 
   const bottomRightRadicand = squaredCanvasX + squaredCanvasY;
+  const distanceToBottomRightCorner = Math.sqrt(bottomRightRadicand);
+
   const topLeftRadicand = squaredOriginX + squaredOriginY;
+  const distanceToTopLeftCorner = Math.sqrt(topLeftRadicand);
 
   const bottomLeftRadicand = squaredOriginX + squaredCanvasY;
-  const topRightRadicand = squaredCanvasX + squaredOriginY;
-
-  const distanceToBottomRightCorner = Math.sqrt(bottomRightRadicand);
-  const distanceToTopLeftCorner = Math.sqrt(topLeftRadicand);
   const distanceToBottomLeftCorner = Math.sqrt(bottomLeftRadicand);
+
+  const topRightRadicand = squaredCanvasX + squaredOriginY;
   const distanceToTopRight = Math.sqrt(topRightRadicand);
 
   const distances = [
