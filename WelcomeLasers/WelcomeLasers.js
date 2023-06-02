@@ -93,10 +93,9 @@ function draw() {
   window.requestAnimationFrame(draw);
 }
 function drawDynamicText() {
-  // if (letters.length == 1) {
-  //   const movingLetter = lastLetterChase(letters[0], corners);
-  //   letters = [movingLetter];
-  // }
+  if (letters.length == 1) {
+    lastLetterChase(letters[0], corners);
+  }
 
   for (let i = 0; i < letters.length; i++) {
     const letter = letters[i];
