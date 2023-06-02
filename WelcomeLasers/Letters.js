@@ -20,8 +20,7 @@ export function createLetters(canvas, ctx) {
   const random = Math.floor(Math.random() * 3);
 
   const messageList = ["Welcome!", "Terrible", "Pong?"];
-  //const message = messageList[random];
-  const message = "O";
+  const message = messageList[random];
   const letterLayoutOption = TextDirection[random];
 
   const letters = [];
