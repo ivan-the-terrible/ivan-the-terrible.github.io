@@ -47,9 +47,6 @@ export function createLetters(canvas, ctx) {
  * @param {Corners} corners
  */
 export function lastLetterChase(letter, corners) {
-  //Set randomness to make letter run away to:
-  // Opposite diagonal corner
-
   if (letter.dy == null) {
     makeLetterMove(letter, corners);
   }

@@ -50,7 +50,7 @@ function determineLaserCollisions() {
   const letterCollision = findLetterCollision();
   if (Object.keys(letterCollision).length != 0) collision = letterCollision;
 
-  const canvasCollision = findCanvasCollision();
+  const canvasCollision = findCanvasCollision(laser);
   if (Object.keys(canvasCollision).length != 0) collision = canvasCollision;
 
   return collision;
@@ -58,8 +58,8 @@ function determineLaserCollisions() {
 function determineLetterSideCollision() {
   return CollisionType.Bottom; //TODO
 }
-function determineCanvasCollisionX() {
-  const futureX = laser.futureX();
+function determineCanvasCollisionX(movingObject) {
+  const futureX = movingObject.futureX();
 
   switch (true) {
     case futureX > canvas.width:
@@ -72,8 +72,8 @@ function determineCanvasCollisionX() {
       return "";
   }
 }
-function determineCanvasCollisionY() {
-  const futureY = laser.futureY();
+function determineCanvasCollisionY(movingObject) {
+  const futureY = movingObject.futureY();
 
   switch (true) {
     case futureY > canvas.height:
@@ -109,9 +109,9 @@ function drawDynamicText() {
   //Holy Guacamole
   //https://stackoverflow.com/questions/1451635/how-to-make-canvas-text-selectable
 }
-function findCanvasCollision() {
-  const xSide = determineCanvasCollisionX();
-  const ySide = determineCanvasCollisionY();
+function findCanvasCollision(movingObject) {
+  const xSide = determineCanvasCollisionX(movingObject);
+  const ySide = determineCanvasCollisionY(movingObject);
   if (xSide || ySide) {
     return {
       type: CollisionType.Canvas,
@@ -189,7 +189,6 @@ function moveLaserFromCanvas(side) {
   }
 }
 function laserHitLetter(collision) {
-  //TODO update dx,dy appropriately
   laser.dx *= -1;
   laser.dy *= -1;
   switch (collision.side) {
