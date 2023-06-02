@@ -75,7 +75,7 @@ function determineFarthestCorner(letter, corners) {
   const diffCanvasX = letter.x - corners.BottomRight.x;
   const diffCanvasY = letter.y - corners.BottomRight.y;
   //Distance of letter to origin are its own coordinates
-  // letter.x - 0
+  //aka letter.x - 0
 
   const squaredCanvasX = diffCanvasX * diffCanvasX;
   const squaredCanvasY = diffCanvasY * diffCanvasY;
