@@ -1,3 +1,11 @@
+/**
+ * Hope you know your typography...
+ * Long story short, the x and y of drawn text set the stage for
+ * lots of characteristics related to text
+ * https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics
+ *
+ * I use XBox/YBox as that is where the bounding box starts.
+ */
 export class Letter {
   character;
   width;
@@ -85,48 +93,89 @@ export class Letter {
       }
     }
   }
+  /**
+   * this.xBox + this.actualBoundingBoxLeft
+   * @returns {Number} this.xBox + this.actualBoundingBoxLeft
+   */
   getX() {
     return this.xBox + this.actualBoundingBoxLeft;
   }
+  /**
+   * this.xBox + this.actualBoundingBoxLeft
+   * @returns {Number} this.xBox + this.actualBoundingBoxLeft
+   */
   getY() {
     return this.yBox + this.height;
   }
+  /**
+   * this.x - this.actualBoundingBoxLeft
+   * @returns {Number} this.x - this.actualBoundingBoxLeft
+   */
   getXBox() {
     return this.x - this.actualBoundingBoxLeft;
   }
   getYBox() {
     return this.y - this.height;
   }
+  /**
+   * To calculate the bounds, it's directional:
+   * - If we are going left (dx is -1), we check xBox + dx
+   * - If we are going right (dx is 1), we check (xBox + width) + dx
+   *
+   * Using XBox as the target reference since it's in the top left
+   * @returns {Number} future relevant x coordinate
+   */
   futureX() {
-    /*
-      To calculate the bounds, it's directional:
-      - If we are going left (dx is -1), we check xBox + dx
-      - If we are going right (dx is 1), we check (xBox + width) + dx
-      Same goes for up and down
-    */
     const sum = this.xBox + this.dx;
     if (Math.sign(this.dx) == 1) return sum + this.width;
     return sum;
   }
+  /**
+   * To calculate the bounds, it's directional:
+   * - If we are going up (dy is -1), we check yBox + dy
+   * - If we are going down (dy is 1), we check (yBox + height) + dy
+   *
+   * Using YBox as the target reference since it's in the top left
+   * @returns {Number} future relevant y coordinate
+   */
   futureY() {
     const sum = this.yBox + this.dy;
     if (Math.sign(this.dy) == 1) return sum + this.height;
     return sum;
   }
+  /**
+   * this.xBox + this.dx
+   * @returns {Number} this.xBox + this.dx
+   */
   futureXBox() {
     return this.xBox + this.dx;
   }
+  /**
+   * this.yBox + this.dy
+   * @returns {Number} this.yBox + this.dy
+   */
   futureYBox() {
     return this.yBox + this.dy;
   }
+  /**
+   * Sets this.x and this.xBox based on velocity (dx)
+   */
   moveX() {
     this.xBox = this.futureXBox();
     this.x = this.getX();
   }
+  /**
+   * Sets this.y and this.yBox based on velocity (dy)
+   */
   moveY() {
     this.yBox = this.futureYBox();
     this.y = this.getY();
   }
+  /**
+   * Resets the x/y and xBox/yBox values based on the side it collided with
+   * @param {String} side
+   * @param {HTMLElement} canvas
+   */
   moveLetterFromCanvas(side, canvas) {
     switch (side) {
       case "Right":
