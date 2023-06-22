@@ -71,6 +71,17 @@
       border: 1px solid;
       background-color: rgb(255, 0, 0);
     }
+
+    .color-venn-diagram-buttons {
+      display: grid;
+      gap: 1em;
+      grid-template-columns: auto auto auto;
+      padding-bottom: 1em;
+    }
+
+    .color-venn-diagram-buttons>button {
+      font-size: 24px;
+    }
   </style>
 </head>
 <script src="./WelcomeLasers/index.js" type="module"></script>
@@ -142,7 +153,7 @@
     <button id="btnLensDebug">Lens Center and Intersections
       Debug</button>
     <button id="btnReuleauxDebug">Reuleaux Debug</button>
-    <button id="btnAddCircle">Add Circle (FOR TESTING, WILL BREAK THIGNS)</button>
+    <button id="btnAddCircle">Add Circle (FOR TESTING, WILL BREAK THINGS)</button>
     <button id="btnReset">Reload Canvas</button>
   </div>
 
