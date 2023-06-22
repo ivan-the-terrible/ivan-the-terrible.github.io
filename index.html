@@ -3,7 +3,6 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Not So Terrible</title>
   <style>
@@ -37,19 +36,23 @@
       margin-bottom: 0px;
     }
 
-    .welcome-blurb {
+    .title-2 {
+      font-size: 3em;
+    }
+
+    .blurb {
       font-size: 2em;
       white-space: pre-wrap;
     }
   </style>
 </head>
 <script src="./WelcomeLasers/index.js" type="module"></script>
-<script src="./ColorVennDiagram/index.js" type="module"></script>
+<script src="./ColorVennDiagram/index.js" type="module" defer async></script>
 
 <body id="body">
   <h1 class="title centered">Vanilla Extract</h1>
   <p class="subtext centered">Presented by <i>Ivan Chwalik</i></p>
-  <pre class="welcome-blurb centered">
+  <pre class="blurb centered">
     Welcome!
     I wanted to create a small space where I could enjoy the fun that are HTML Canvases.
 
@@ -68,6 +71,18 @@
   </div>
 
   <div id="color-venn-diagram-box">
+    <h2 class="title-2 centered"><u>Color Venn Diagrams</u></h2>
+    <pre class="blurb centered">
+      So the idea with this one was to create something to visualize the additive color phenomen
+      AND sneak in a mathematical proof too.
+
+      You have 3 circles (red, green, and blue) that you can move around and upon overlap see the additive color.
+
+      Since we are overlapping circles to create lenses, I used <a href="http://paulbourke.net/geometry/circlesphere/#:~:text=Intersection%20of%20two%20circles">Paul Bourke's proof</a>.
+      When 3 circles overlap, it creates a subset of the Reuleaux Triangle that you'll see as white.
+    </pre>
+    <p class="subtext centered">DISCLAIMER: Moving the circles to intersect at certain angles break how the colors work,
+      but for the most part this works.
     <h2>RGB Color Input</h2>
     <h3>Red</h3>
     <p id="redValue" class="redValue">255</p>
