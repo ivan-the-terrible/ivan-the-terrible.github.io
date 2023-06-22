@@ -1,4 +1,4 @@
-import { AttachEvents } from "../util.js";
+import { AttachEvent } from "../util.js";
 import { findCanvasCollision } from "./CanvasCollisions.js";
 import { CollisionType } from "./CollisionTypeEnum.js";
 import { Corners } from "./Corners.js";
@@ -15,7 +15,7 @@ var corners;
 initCanvas();
 
 function initCanvas() {
-  AttachEvents(window, "resize", adjustCanvas);
+  AttachEvent(window, "resize", adjustCanvas);
   canvas.width = originalCanvasWidth;
   canvas.height = window.innerHeight / 2;
   corners = new Corners(canvas);

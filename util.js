@@ -1,5 +1,8 @@
-export function AttachEvents(element, type, handler) {
+export function AttachEvent(element, type, handler) {
   element.addEventListener(type, handler);
+}
+export function DetachEvent(element, type, handler) {
+  element.removeEventListener(type, handler);
 }
 /**
  * Following Bootstrap's criteria for response breakpoints, we determine font size.
