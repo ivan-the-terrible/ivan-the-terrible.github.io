@@ -11,7 +11,7 @@
     body {
       color: white;
       background-color: black;
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: monospace, Helvetica, sans-serif;
     }
 
     #welcome-box {
@@ -27,12 +27,37 @@
       justify-content: center;
       align-items: center;
     }
+
+    .centered {
+      text-align: center;
+    }
+
+    .title {
+      font-size: 5em;
+      margin-bottom: 0px;
+    }
+
+    .welcome-blurb {
+      font-size: 2em;
+      white-space: pre-wrap;
+    }
   </style>
 </head>
 <script src="./WelcomeLasers/index.js" type="module"></script>
 <script src="./ColorVennDiagram/index.js" type="module"></script>
 
 <body id="body">
+  <h1 class="title centered">Vanilla Extract</h1>
+  <p class="subtext centered">Presented by <i>Ivan Chwalik</i></p>
+  <pre class="welcome-blurb centered">
+    Welcome!
+    I wanted to create a small space where I could enjoy the fun that are HTML Canvases.
+
+    There will be no libraries here.
+    Nothing but clean cut Javascript doing its thing to draw bits on maps.
+  </pre>
+  <p class="subtext centered">I'll do my best to support mobile, but meh. Mouse events and touch events are the devil.
+  </p>
   <div id="welcome-box">
     <canvas id="welcome-lasers"></canvas>
     <noscript>
@@ -41,6 +66,7 @@
       </div>
     </noscript>
   </div>
+
   <div id="color-venn-diagram-box">
     <h2>RGB Color Input</h2>
     <h3>Red</h3>
