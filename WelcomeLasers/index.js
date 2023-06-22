@@ -9,7 +9,7 @@ var boundingBoxDebug = false;
 var letters = [];
 var laser = new Laser();
 var originalCanvasWidth = document.getElementById("body").offsetWidth;
-const canvas = document.getElementById("welcome-lasers");
+const canvas = document.getElementById("welcomeLasers");
 const ctx = canvas.getContext("2d");
 var corners;
 initCanvas();

@@ -13,12 +13,12 @@
       font-family: monospace, Helvetica, sans-serif;
     }
 
-    #welcome-box {
+    .welcome-box {
       border: 2px dashed white;
       display: block;
     }
 
-    #welcome-text {
+    .welcome-text {
       text-align: center;
       font-size: 30px;
       height: 50vh;
@@ -44,6 +44,33 @@
       font-size: 2em;
       white-space: pre-wrap;
     }
+
+    .color-inputs {
+      display: flex;
+      flex-direction: row;
+    }
+
+    @media (max-width: 600px) {
+      .color-inputs {
+        flex-wrap: wrap;
+      }
+
+    }
+
+    .color-input {
+      padding: 1em;
+    }
+
+    .rgb-result {
+      flex-grow: 1;
+    }
+
+    #rgbResult {
+      width: 100%;
+      height: 4em;
+      border: 1px solid;
+      background-color: rgb(255, 0, 0);
+    }
   </style>
 </head>
 <script src="./WelcomeLasers/index.js" type="module"></script>
@@ -64,18 +91,17 @@
   </pre>
   <p class="subtext centered">I'll do my best to support mobile, but meh. Mouse events and touch events are the devil.
   </p>
-  <div id="welcome-box">
-    <canvas id="welcome-lasers"></canvas>
+  <div class="welcome-box">
+    <canvas id="welcomeLasers"></canvas>
     <noscript>
-      <div id="welcome-text">
+      <div class="welcome-text">
         Welcome!
       </div>
     </noscript>
   </div>
 
-  <div id="color-venn-diagram-box">
-    <h2 class="title-2 centered"><u>Color Venn Diagrams</u></h2>
-    <pre class="blurb centered">
+  <h2 class="title-2 centered"><u>Color Venn Diagrams</u></h2>
+  <pre class="blurb centered">
       So the idea with this one was to create something to visualize the additive color phenomen
       AND sneak in a mathematical proof too.
 
@@ -84,21 +110,33 @@
       Since we are overlapping circles to create lenses, I used <a href="http://paulbourke.net/geometry/circlesphere/#:~:text=Intersection%20of%20two%20circles">Paul Bourke's proof</a>.
       When 3 circles overlap, it creates a subset of the Reuleaux Triangle that you'll see as white.
     </pre>
-    <p class="subtext centered">DISCLAIMER: Moving the circles to intersect at certain angles break how the colors work,
-      but for the most part this works.
-    <h2>RGB Color Input of Active Circle</h2>
-    <h3>Red</h3>
-    <p id="redValue" class="redValue">255</p>
-    <input id="redInput" type="range" min="0" max="255" value="255">
-    <h3>Green</h3>
-    <p id="greenValue" class="greenValue">0</p>
-    <input id="greenInput" type="range" min="0" max="255" value="0">
-    <h3>Blue</h3>
-    <p id="blueValue" class="blueValue">0</p>
-    <input id="blueInput" type="range" min="0" max="255" value="0">
-    <h3>Result</h3>
-    <div id="rgbResult" style="width: 100%; height: 50px; border: 1px solid; background-color: rgb(255, 0, 0);"></div>
-    <h3>NOTE: Resizing window will reset the canvas.</h3>
+  <p class="subtext centered">DISCLAIMER: Moving the circles to intersect at certain angles break how the colors work,
+    but for the most part this works.
+  <h2>RGB Color Input of Active Circle</h2>
+  <div class="color-inputs">
+    <div class="color-input">
+      <h3>Red</h3>
+      <p id="redValue" class="redValue">255</p>
+      <input id="redInput" type="range" min="0" max="255" value="255">
+    </div>
+    <div class="color-input">
+      <h3>Green</h3>
+      <p id="greenValue" class="greenValue">0</p>
+      <input id="greenInput" type="range" min="0" max="255" value="0">
+    </div class="color-input">
+    <div class="color-input">
+      <h3>Blue</h3>
+      <p id="blueValue" class="blueValue">0</p>
+      <input id="blueInput" type="range" min="0" max="255" value="0">
+    </div>
+    <div class="rgb-result">
+      <h3>Result</h3>
+      <div id="rgbResult"></div>
+    </div>
+  </div>
+
+  <h3>NOTE: Resizing window will reset the canvas.</h3>
+  <div class="color-venn-diagram-buttons">
     <button id="btnMouseDebug">Mouse Debug</button>
     <button id="btnCircleDebug">Circle Boundary Debug</button>
     <button id="btnLensDebug">Lens Center and Intersections
@@ -106,8 +144,9 @@
     <button id="btnReuleauxDebug">Reuleaux Debug</button>
     <button id="btnAddCircle">Add Circle (FOR TESTING, WILL BREAK THIGNS)</button>
     <button id="btnReset">Reload Canvas</button>
-    <canvas id="color-venn-diagram" height="500" style="border: 1px solid; display: block;"></canvas>
   </div>
+
+  <canvas id="colorVennDiagram" height="500" style="border: 1px solid; display: block;"></canvas>
 </body>
 
 </html>

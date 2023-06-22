@@ -10,10 +10,8 @@ var originalX;
 var originalY;
 var shapes;
 var circleRadius = 75;
-var originalCanvasWidth = document.getElementById(
-  "color-venn-diagram-box"
-).offsetWidth;
-const canvas = document.getElementById("color-venn-diagram");
+var originalCanvasWidth = document.getElementById("body").offsetWidth;
+const canvas = document.getElementById("colorVennDiagram");
 const ctx = canvas.getContext("2d");
 
 initCanvas(); //Initialize
