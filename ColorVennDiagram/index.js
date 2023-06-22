@@ -1,3 +1,5 @@
+import { AttachEvent } from "../util.js";
+
 var mouseDebug = false;
 var circleBoundaryDebug = false;
 var lensDebug = false;
@@ -13,24 +15,21 @@ var originalCanvasWidth = document.getElementById(
 ).offsetWidth;
 const canvas = document.getElementById("color-venn-diagram");
 const ctx = canvas.getContext("2d");
-AttachEvents(canvas, "mousedown", setActive);
-AttachEvents(canvas, "mousemove", moveCircle);
-AttachEvents(canvas, "mouseup", removeActive);
-AttachEvents(window, "resize", adjustShapes);
+
 initCanvas(); //Initialize
 var lastCircle = shapes.circle1;
 
 //#region Debug
-function ToggleMouseDebug(e) {
+function ToggleMouseDebug() {
   mouseDebug = !mouseDebug;
 }
-function ToggleCircleBoundaryDebug(e) {
+function ToggleCircleBoundaryDebug() {
   circleBoundaryDebug = !circleBoundaryDebug;
 }
-function ToggleLensCenterAndIntersectionsDebug(e) {
+function ToggleLensCenterAndIntersectionsDebug() {
   lensDebug = !lensDebug;
 }
-function ToggleReuleauxPointsDebug(e) {
+function ToggleReuleauxPointsDebug() {
   reuleauxDebug = !reuleauxDebug;
 }
 function mouseToCircleBoundariesDebug(
@@ -192,13 +191,46 @@ function rgbToHex(r, g, b) {
   return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
 //#endregion
-function AttachEvents(element, type, handler) {
-  element.addEventListener(type, handler);
+
+function AttachEvents() {
+  AttachEvent(canvas, "mousedown", setActive);
+  AttachEvent(canvas, "mousemove", moveCircle);
+  AttachEvent(canvas, "mouseup", removeActive);
+  AttachEvent(window, "resize", adjustShapes);
+
+  //#region Inputs
+  const redInput = document.getElementById("redInput");
+  AttachEvent(redInput, "input", changeRed);
+
+  const greenInput = document.getElementById("greenInput");
+  AttachEvent(greenInput, "input", changeGreen);
+
+  const blueInput = document.getElementById("blueInput");
+  AttachEvent(blueInput, "input", changeBlue);
+  //#endregion
+  //#region Buttons
+  const btnMouseDebug = document.getElementById("btnMouseDebug");
+  AttachEvent(btnMouseDebug, "click", ToggleMouseDebug);
+
+  const btnCircleDebug = document.getElementById("btnCircleDebug");
+  AttachEvent(btnCircleDebug, "click", ToggleCircleBoundaryDebug);
+
+  const btnLensDebug = document.getElementById("btnLensDebug");
+  AttachEvent(btnLensDebug, "click", ToggleLensCenterAndIntersectionsDebug);
+
+  const btnReuleauxDebug = document.getElementById("btnReuleauxDebug");
+  AttachEvent(btnReuleauxDebug, "click", ToggleReuleauxPointsDebug);
+
+  const btnAddCircle = document.getElementById("btnAddCircle");
+  AttachEvent(btnAddCircle, "click", AddCircle);
+
+  const btnReset = document.getElementById("btnReset");
+  AttachEvent(btnReset, "click", initCanvas);
+  //#endregion
 }
-function DetachEvents(element, type, handler) {
-  element.removeEventListener(type, handler);
-}
+
 function initCanvas() {
+  AttachEvents();
   canvas.width = originalCanvasWidth;
   //The canvas should be the same width as the parent container it is in.
   const canvasCenter = originalCanvasWidth / 2;
@@ -281,16 +313,16 @@ function AddCircle() {
   drawCircles();
 }
 //#region These functions have been adapted from W3Schools Color Picker page: https://www.w3schools.com/colors/colors_picker.asp
-function changeRed(value) {
-  document.querySelector(".redValue").innerHTML = value;
+function changeRed() {
+  document.querySelector(".redValue").innerHTML = this.value;
   updateColor();
 }
-function changeGreen(value) {
-  document.querySelector(".greenValue").innerHTML = value;
+function changeGreen() {
+  document.querySelector(".greenValue").innerHTML = this.value;
   updateColor();
 }
-function changeBlue(value) {
-  document.querySelector(".blueValue").innerHTML = value;
+function changeBlue() {
+  document.querySelector(".blueValue").innerHTML = this.value;
   updateColor();
 }
 function updateColor() {
@@ -745,7 +777,7 @@ function setActive(e) {
     }
   }
 }
-function removeActive(e) {
+function removeActive() {
   if (currentCircle != null) {
     lastCircle = currentCircle;
     currentCircle = null;
