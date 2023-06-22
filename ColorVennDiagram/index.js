@@ -20,15 +20,35 @@ var lastCircle = shapes.circle1;
 //#region Debug
 function ToggleMouseDebug() {
   mouseDebug = !mouseDebug;
+  if (mouseDebug) {
+    this.style.backgroundColor = "lightgreen";
+  } else {
+    this.style.backgroundColor = "";
+  }
 }
 function ToggleCircleBoundaryDebug() {
   circleBoundaryDebug = !circleBoundaryDebug;
+  if (circleBoundaryDebug) {
+    this.style.backgroundColor = "lightgreen";
+  } else {
+    this.style.backgroundColor = "";
+  }
 }
 function ToggleLensCenterAndIntersectionsDebug() {
   lensDebug = !lensDebug;
+  if (lensDebug) {
+    this.style.backgroundColor = "lightgreen";
+  } else {
+    this.style.backgroundColor = "";
+  }
 }
 function ToggleReuleauxPointsDebug() {
   reuleauxDebug = !reuleauxDebug;
+  if (reuleauxDebug) {
+    this.style.backgroundColor = "lightgreen";
+  } else {
+    this.style.backgroundColor = "";
+  }
 }
 function mouseToCircleBoundariesDebug(
   mouseX,
@@ -301,9 +321,9 @@ function AddCircle() {
     x: canvas.width / 2,
     y: canvas.height / 2,
     radius: circleRadius,
-    redValue: 0,
-    greenValue: 0,
-    blueValue: 0,
+    redValue: Math.floor(Math.random() * 256),
+    greenValue: Math.floor(Math.random() * 256),
+    blueValue: Math.floor(Math.random() * 256),
     get color() {
       return [this.redValue, this.greenValue, this.blueValue];
     },
