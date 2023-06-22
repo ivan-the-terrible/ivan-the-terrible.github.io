@@ -251,7 +251,7 @@ function adjustShapes() {
   const canvasOffset = newCanvasWidth - originalCanvasWidth;
   //Clear canvas and redraw circles.
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  for (key in shapes) {
+  for (const key in shapes) {
     const circle = shapes[key];
     //I don't want the circles to go off screen when resizing.
     if (circle.x + canvasOffset > circle.radius) {
