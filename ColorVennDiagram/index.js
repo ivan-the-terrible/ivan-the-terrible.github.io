@@ -750,6 +750,7 @@ function checkBetweenTwoAngles(boundaries, pointToCheck) {
 function setActive(e) {
   //Determine original mouse position
   if (e.type == "touchstart") {
+    e.preventDefault(); //Prevent default touch behavior (like scrolling)
     var clientX = e.touches[0].clientX;
     var clientY = e.touches[0].clientY;
   } else {
@@ -813,6 +814,7 @@ function moveCircle(e) {
   if (currentCircle != null) {
     //Determine current mouse position
     if (e.type == "touchmove") {
+      e.preventDefault(); //Prevent default touch behavior (like scrolling)
       var clientX = e.touches[0].clientX;
       var clientY = e.touches[0].clientY;
     } else {
