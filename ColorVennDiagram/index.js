@@ -214,6 +214,11 @@ function AttachEvents() {
   AttachEvent(canvas, "mousedown", setActive);
   AttachEvent(canvas, "mousemove", moveCircle);
   AttachEvent(canvas, "mouseup", removeActive);
+
+  AttachEvent(canvas, "touchstart", setActive);
+  AttachEvent(canvas, "touchmove", moveCircle);
+  AttachEvent(canvas, "touchend", removeActive);
+
   AttachEvent(window, "resize", adjustShapes);
 
   //#region Inputs
@@ -745,11 +750,12 @@ function checkBetweenTwoAngles(boundaries, pointToCheck) {
 function setActive(e) {
   //Determine original mouse position
   if (e.type == "touchstart") {
-    originalX = e.touches[0].clientX + window.pageXOffset - canvas.offsetLeft;
-    originalY = e.touches[0].clientY + window.pageYOffset - canvas.offsetTop;
+    var clientX = e.touches[0].clientX;
+    var clientY = e.touches[0].clientY;
   } else {
-    originalX = e.clientX + window.pageXOffset - canvas.offsetLeft;
-    originalY = e.clientY + window.pageYOffset - canvas.offsetTop;
+    var clientX = e.clientX;
+    var clientY = e.clientY;
+
     /*
           e.client X and Y represent the mouse's position.
           window.page X and Y Offset returns the pixels the current document has been scrolled from the upper left corner of the window, horizontally and vertically.
@@ -760,6 +766,8 @@ function setActive(e) {
     // console.log({canvasParent: canvas.offsetParent, canvasOffSetX: canvas.offsetLeft, canvasOffsetY: canvas.offsetTop});
     // console.log({mouseX: originalX, mouseY: originalY});
   }
+  originalX = clientX + window.pageXOffset - canvas.offsetLeft;
+  originalY = clientY + window.pageYOffset - canvas.offsetTop;
   /*
       We are going to want to determine if the mouse is ontop of the circles, then if it is, move the circle.
       I will need to loop through the list backwards since I want to start at the top (the Canvas renders items on top of each other).
@@ -804,14 +812,16 @@ function removeActive() {
 function moveCircle(e) {
   if (currentCircle != null) {
     //Determine current mouse position
-    if (e.type == "touchstart") {
-      var mouseX =
-        e.touches[0].clientX + window.pageXOffset - canvas.offsetLeft;
-      var mouseY = e.touches[0].clientY + window.pageYOffset - canvas.offsetTop;
+    if (e.type == "touchmove") {
+      var clientX = e.touches[0].clientX;
+      var clientY = e.touches[0].clientY;
     } else {
-      var mouseX = e.clientX + window.pageXOffset - canvas.offsetLeft;
-      var mouseY = e.clientY + window.pageYOffset - canvas.offsetTop;
+      var clientX = e.clientX;
+      var clientY = e.clientY;
     }
+    var mouseX = clientX + window.pageXOffset - canvas.offsetLeft;
+    var mouseY = clientY + window.pageYOffset - canvas.offsetTop;
+
     //Calculate the movement difference
     const mouseDifferenceX = mouseX - originalX;
     const mouseDifferenceY = mouseY - originalY;
