@@ -82,10 +82,18 @@
     .color-venn-diagram-buttons>button {
       font-size: 24px;
     }
+
+    .triagle-fractals-buttons {
+      display: grid;
+      gap: 1em;
+      grid-template-columns: auto auto auto;
+      padding-bottom: 1em;
+    }
   </style>
 </head>
 <script src="./WelcomeLasers/index.js" type="module"></script>
 <script src="./ColorVennDiagram/index.js" type="module" defer async></script>
+<script src="./TriangleFractals/index.js" type="module" defer async></script>
 
 <body id="body">
   <h1 class="title centered">Vanilla Extract</h1>
@@ -164,6 +172,17 @@
 
     I also wanted to be able to determine how many triangles there are at any given level of recursion. This requires leveraging Geometric Series.
   </pre>
+  <div class="triagle-fractals-buttons">
+    <div>
+      <h3>Level of Recursion (n)</h3>
+      <input id="recursionLevelInput" type="range" min="0" max="10" value="0">
+      <div id="recursionLevelValue" class="recursionLevelValue">0</div>
+    </div>
+    <div>
+      <p>Number of Triangles:</p>
+      <div id="triangleCount" class="triangletriangleCount">1</div>
+    </div>
+  </div>
   <canvas id="triangleFractal" height="500" style="border: 1px solid; display: block;"></canvas>
 </body>
 
