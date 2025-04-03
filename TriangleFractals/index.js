@@ -16,7 +16,7 @@ function AttachEvents() {
 function initCanvas() {
   AttachEvents();
   canvas.width = originalCanvasWidth;
-  canvas.height = originalCanvasWidth;
+  canvas.height = window.innerHeight / 2;
   //The canvas should be the same width as the parent container it is in.
   const triangleSize = Math.min(canvas.width, canvas.height) / 2;
   clearCanvasRedraw();
@@ -37,6 +37,7 @@ function adjustTriangle() {
   //Set the canvas to the new width.
   const newCanvasWidth = document.getElementById("body").offsetWidth;
   canvas.width = newCanvasWidth;
+  canvas.height = window.innerHeight / 2;
   clearCanvasRedraw();
   //Redraw the triangle with the new dimensions.
   const recursionLevel = parseInt(document.getElementById("recursionLevelInput").value, 10);
@@ -86,10 +87,9 @@ function updateRecursionLevel(e) {
 }
 
 function updateNumberOfTriangles(recursionLevel) {
-  //The formula for the number of triangles is (4^(n+1) - 4) / 3 + 1
-  const numerator = Math.pow(4, recursionLevel + 1) - 4; // 4^(n+1) - 4
-
-  const geometricSeriesSum = numerator / 3 + 1; // + 1 for the original triangle
+  //The formula for the number of triangles is (4^n - 1) / 3
+  const numerator = Math.pow(4, recursionLevel) - 1;
+  const geometricSeriesSum = numerator / 3;
 
   document.getElementById("triangleCount").innerHTML = geometricSeriesSum;
 }

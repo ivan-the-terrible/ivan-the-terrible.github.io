@@ -170,7 +170,9 @@
 
     The idea is to take a triangle and split it into 3 smaller triangles, then repeat the process on each of the smaller triangles.
 
-    I also wanted to be able to determine how many triangles there are at any given level of recursion. This requires leveraging Geometric Series.
+    I also wanted to be able to determine how many triangles there are at any given level of recursion WITHOUT counting from a loop.
+
+    I want an equation, which would be so much faster than a recursive loop. This requires leveraging Geometric Series.
   </pre>
   <div class="triagle-fractals-buttons">
     <div>
@@ -184,6 +186,340 @@
     </div>
   </div>
   <canvas id="triangleFractal" height="500" style="border: 1px solid; display: block;"></canvas>
+  <pre class="blurb">
+    Let's walk through how to determine the number of triangles at any given state.
+
+    The initial state has 1 triangle,
+    the second state has 4 triangles,
+    the third state has 16 triangles,
+    and so on.
+
+    We can write out what each state has for the number of triangles as:
+    <math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+      <mn>1</mn>
+      <mo>+</mo>
+      <mn>4</mn>
+      <mo>+</mo>
+      <mn>16</mn>
+      <mo>+</mo>
+      <mn>64</mn>
+      <mo>+</mo>
+      <mn>256</mn>
+      <mo>+</mo>
+      <mn>1024</mn>
+      <mo>+ ...</mo>
+    </math>
+    Now we can have some fun with this infinite series.
+
+    This series could be rewritten as:
+    <math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+      <mn>1</mn>
+      <mo>+</mo>
+      <msup>
+        <mn>2</mn>
+        <mn>2</mn>
+      </msup>
+      <mo>+</mo>
+      <msup>
+        <mn>4</mn>
+        <mn>2</mn>
+      </msup>
+      <mo>+</mo>
+      <msup>
+        <mn>8</mn>
+        <mn>2</mn>
+      </msup>
+      <mo>+</mo>
+      <msup>
+        <mn>16</mn>
+        <mn>2</mn>
+      </msup>
+      <mo>+</mo>
+      <msup>
+        <mn>32</mn>
+        <mn>2</mn>
+      </msup>
+      <mo>+ ...</mo>
+    </math>
+    <math  display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+      <mn>1</mn>
+      <mo>+</mo>
+      <mrow>
+        <mn>1</mn>
+        <mo>(</mo>
+        <mn>4</mn>
+        <mo>)</mo>
+      </mrow>
+      <mo>+</mo>
+      <mrow>
+        <mn>4</mn>
+        <mo>(</mo>
+        <mn>4</mn>
+        <mo>)</mo>
+      </mrow>
+      <mo>+</mo>
+      <mrow>
+        <mn>16</mn>
+        <mo>(</mo>
+        <mn>4</mn>
+        <mo>)</mo>
+      </mrow>
+      <mo>+</mo>
+      <mrow>
+        <mn>64</mn>
+        <mo>(</mo>
+        <mn>4</mn>
+        <mo>)</mo>
+      </mrow>
+      <mo>+</mo>
+      <mrow>
+        <mn>256</mn>
+        <mo>(</mo>
+        <mn>4</mn>
+        <mo>)</mo>
+      </mrow>
+      <mo>+ ...</mo>
+    </math>
+    <math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+      <msup>
+        <mn>4</mn>
+        <mn>0</mn>
+      </msup>
+      <mo>+</mo>
+      <msup>
+        <mn>4</mn>
+        <mn>1</mn>
+      </msup>
+      <mo>+</mo>
+      <msup>
+        <mn>4</mn>
+        <mn>2</mn>
+      </msup>
+      <mo>+</mo>
+      <msup>
+        <mn>4</mn>
+        <mn>3</mn>
+      </msup>
+      <mo>+</mo>
+      <msup>
+        <mn>4</mn>
+        <mn>4</mn>
+      </msup>
+      <mo>+</mo>
+      <msup>
+        <mn>4</mn>
+        <mn>5</mn>
+      </msup>
+      <mo>+ ...</mo>
+    </math>
+    <math xmls="http://www.w3.org/1998/Math/MathML" display="block">
+      <msup>
+        <mn>2</mn>
+        <mrow>
+          <mn>2</mn>
+          <mo>(</mo>
+          <mrow>
+            <mn>0</mn>
+          </mrow>
+          <mo>)</mo>
+        </mrow>
+      </msup>
+      <mo>+</mo>
+      <msup>
+        <mn>2</mn>
+        <mrow>
+          <mn>2</mn>
+          <mo>(</mo>
+          <mrow>
+            <mn>1</mn>
+          </mrow>
+          <mo>)</mo>
+        </mrow>
+      </msup>
+      <mo>+</mo>
+      <msup>
+        <mn>2</mn>
+        <mrow>
+          <mn>2</mn>
+          <mo>(</mo>
+          <mrow>
+            <mn>2</mn>
+          </mrow>
+          <mo>)</mo>
+        </mrow>
+      </msup>
+      <mo>+</mo>
+      <msup>
+        <mn>2</mn>
+        <mrow>
+          <mn>2</mn>
+          <mo>(</mo>
+          <mrow>
+            <mn>3</mn>
+          </mrow>
+          <mo>)</mo>
+        </mrow>
+      </msup>
+      <mo>+</mo>
+      <msup>
+        <mn>2</mn>
+        <mrow>
+          <mn>2</mn>
+          <mo>(</mo>
+          <mrow>
+            <mn>4</mn>
+          </mrow>
+          <mo>)</mo>
+        </mrow>
+      </msup>
+      <mo>+</mo>
+      <msup>
+        <mn>2</mn>
+        <mrow>
+          <mn>2</mn>
+          <mo>(</mo>
+          <mrow>
+            <mn>5</mn>
+          </mrow>
+          <mo>)</mo>
+        </mrow>
+      </msup>
+      <mo>+ ...</mo>
+    </math>
+
+    These can be rewritten with summation notations as:
+    <math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+      <munderover>
+        <mo>∑</mo>
+        <mrow>
+          <mi>n</mi>
+          <mo>=</mo>
+          <mn>0</mn>
+        </mrow>
+        <mrow>
+          <mo>∞</mo>
+        </mrow>
+      </munderover>
+      <msup>
+        <mn>4</mn>
+        <mi>n</mi>
+      </msup>
+      <mo>=</mo>
+      <munderover>
+        <mo>∑</mo>
+        <mrow>
+          <mi>n</mi>
+          <mo>=</mo>
+          <mn>0</mn>
+        </mrow>
+        <mrow>
+          <mo>∞</mo>
+        </mrow>
+      </munderover>
+      <msup>
+        <mn>2</mn>
+        <mrow>
+          <mn>2</mn>
+          <mi>n</mi>
+        </mrow>
+      </msup>
+    </math>
+    <math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+      <msup>
+        <mn>4</mn>
+        <mi>n</mi>
+      </msup>
+      <mo>=</mo>
+      <msup>
+        <mrow>
+          <mo>(</mo>
+          <msup>
+            <mn>2</mn>
+            <mn>2</mn>
+          </msup>
+          <mo>)</mo>
+        </mrow>
+        <mi>n</mi>
+      </msup>
+      <mo>=</mo>
+      <msup>
+        <mn>2</mn>
+        <mrow>
+          <mn>2</mn>
+          <mi>n</mi>
+        </mrow>
+      </msup>
+      </math>
+    </math>
+    The sum of a Geometric Series is well known to be:
+    <math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+      <msub>
+        <mi>S</mi>
+        <mi>n</mi>
+      </msub>
+      <mo>=</mo>
+      <mfrac>
+        <mrow>
+          <mi>a</mi>
+          <mrow>
+            <mo>(</mo>
+            <msup>
+              <mi>r</mi>
+              <mi>n</mi>
+            </msup>
+            <mo>-</mo>
+            <mn>1</mn>
+            <mo>)</mo>
+          </mrow>
+        </mrow>
+        <mrow>
+          <mi>r</mi>
+          <mo>-</mo>
+          <mn>1</mn>
+        </mrow>
+      </mfrac>
+      <mo>=</mo>
+      <mfrac>
+        <mrow>
+          <mi>a</mi>
+          <mrow>
+            <mo>(</mo>
+            <mn>1</mn>
+            <mo>-</mo>
+            <msup>
+              <mi>r</mi>
+              <mi>n</mi>
+            </msup>
+            <mo>)</mo>
+          </mrow>
+        </mrow>
+        <mrow>
+          <mn>1</mn>
+          <mo>-</mo>
+          <mi>r</mi>
+        </mrow>
+      </mfrac>
+    </math>
+    when a is the first term and r is the common ratio.
+
+    In our case, a = 1 and r = 4.
+
+    I prefer to use the left side. Inputting our equation we get:
+    <math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+      <mfrac>
+        <mrow>
+          <msup>
+            <mn>4</mn>
+            <mi>n</mi>
+          </msup>
+          <mo>-</mo>
+          <mn>1</mn>
+        </mrow>
+        <mn>3</mn>
+      </mfrac>
+    </math>
+    And this is exactly what I use in the code.
+  </pre>
 </body>
 
 </html>
