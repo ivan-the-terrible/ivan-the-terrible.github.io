@@ -1,6 +1,7 @@
 import { AttachEvent } from "../util.js";
 
 var originalCanvasWidth = document.getElementById("body").offsetWidth;
+const canvasCenter = originalCanvasWidth / 2;
 const canvas = document.getElementById("triangleFractal");
 const ctx = canvas.getContext("2d");
 
@@ -18,12 +19,8 @@ function initCanvas() {
   canvas.width = originalCanvasWidth;
   canvas.height = originalCanvasWidth;
   //The canvas should be the same width as the parent container it is in.
-  const canvasCenter = originalCanvasWidth / 2;
   const triangleSize = Math.min(canvas.width, canvas.height) / 2;
-  //Clear canvas and redraw
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  clearCanvasRedraw();
   //Redraw the triangle with the new dimensions.
   const recursionLevel = parseInt(document.getElementById("recursionLevelInput").value, 10);
   drawTriangle(canvasCenter, 0, triangleSize, recursionLevel);
@@ -31,23 +28,10 @@ function initCanvas() {
   originalCanvasWidth = originalCanvasWidth;
 }
 
-function updateRecursionLevel(e) {
-  const recursionLevel = parseInt(e.target.value, 10);
-
-  document.getElementById("recursionLevelValue").innerHTML = recursionLevel;
-  //Clear canvas and redraw
+function clearCanvasRedraw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  const canvasCenter = originalCanvasWidth / 2;
-  const triangleSize = Math.min(canvas.width, canvas.height) / 2;
-
-  drawTriangle(
-    canvasCenter,
-    0,
-    triangleSize,
-    recursionLevel
-  );
 }
 
 function adjustTriangle() {
@@ -55,10 +39,7 @@ function adjustTriangle() {
   //Set the canvas to the new width.
   const newCanvasWidth = document.getElementById("body").offsetWidth;
   canvas.width = newCanvasWidth;
-  //Clear canvas and redraw
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  clearCanvasRedraw();
   //Redraw the triangle with the new dimensions.
   const recursionLevel = parseInt(document.getElementById("recursionLevelInput").value, 10);
   const triangleX = canvas.width / 2;
@@ -89,4 +70,17 @@ function drawTriangle(x, y, size, recursionLevel) {
     drawTriangle(x - halfSize, halfHeight, halfSize, nextRecursionLevel);
     drawTriangle(x + halfSize, halfHeight, halfSize, nextRecursionLevel);
   }
+}
+
+function updateRecursionLevel(e) {
+  const recursionLevel = parseInt(e.target.value, 10);
+
+  document.getElementById("recursionLevelValue").innerHTML = recursionLevel;
+  //Clear canvas and redraw
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  const triangleSize = Math.min(canvas.width, canvas.height) / 2;
+
+  drawTriangle(canvasCenter, 0, triangleSize, recursionLevel);
 }
