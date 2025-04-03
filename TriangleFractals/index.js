@@ -55,8 +55,6 @@ function adjustTriangle() {
   //Set the canvas to the new width.
   const newCanvasWidth = document.getElementById("body").offsetWidth;
   canvas.width = newCanvasWidth;
-  //The canvas should be the same width as the parent container it is in.
-  const canvasOffset = newCanvasWidth - originalCanvasWidth;
   //Clear canvas and redraw
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "black";
@@ -83,18 +81,12 @@ function drawTriangle(x, y, size, recursionLevel) {
     ctx.closePath();
     ctx.fill();
   } else {
-    drawTriangle(x, y, size / 2, recursionLevel - 1);
-    drawTriangle(
-      x - size / 2,
-      y + (size * Math.sqrt(3)) / 2,
-      size / 2,
-      recursionLevel - 1
-    );
-    drawTriangle(
-      x + size / 2,
-      y + (size * Math.sqrt(3)) / 2,
-      size / 2,
-      recursionLevel - 1
-    );
+    const nextRecursionLevel = recursionLevel - 1;
+    const halfSize = size / 2;
+    const halfHeight = y + (size * Math.sqrt(3)) / 2;
+    //Draw 3 smaller triangles
+    drawTriangle(x, y, halfSize, nextRecursionLevel);
+    drawTriangle(x - halfSize, halfHeight, halfSize, nextRecursionLevel);
+    drawTriangle(x + halfSize, halfHeight, halfSize, nextRecursionLevel);
   }
 }
