@@ -1,7 +1,6 @@
 import { AttachEvent } from "../util.js";
 
 var originalCanvasWidth = document.getElementById("body").offsetWidth;
-const canvasCenter = originalCanvasWidth / 2;
 const canvas = document.getElementById("triangleFractal");
 const ctx = canvas.getContext("2d");
 
@@ -23,9 +22,8 @@ function initCanvas() {
   clearCanvasRedraw();
   //Redraw the triangle with the new dimensions.
   const recursionLevel = parseInt(document.getElementById("recursionLevelInput").value, 10);
+  const canvasCenter = originalCanvasWidth / 2;
   drawTriangle(canvasCenter, 0, triangleSize, recursionLevel);
-  //Update the original canvas width to the new width.
-  originalCanvasWidth = originalCanvasWidth;
 }
 
 function clearCanvasRedraw() {
@@ -76,11 +74,22 @@ function updateRecursionLevel(e) {
   const recursionLevel = parseInt(e.target.value, 10);
 
   document.getElementById("recursionLevelValue").innerHTML = recursionLevel;
+
+  updateNumberOfTriangles(recursionLevel);
   //Clear canvas and redraw
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   const triangleSize = Math.min(canvas.width, canvas.height) / 2;
-
+  const canvasCenter = originalCanvasWidth / 2;
   drawTriangle(canvasCenter, 0, triangleSize, recursionLevel);
+}
+
+function updateNumberOfTriangles(recursionLevel) {
+  //The formula for the number of triangles is (4^(n+1) - 4) / 3 + 1
+  const numerator = Math.pow(4, recursionLevel + 1) - 4; // 4^(n+1) - 4
+
+  const geometricSeriesSum = numerator / 3 + 1; // + 1 for the original triangle
+
+  document.getElementById("triangleCount").innerHTML = geometricSeriesSum;
 }
