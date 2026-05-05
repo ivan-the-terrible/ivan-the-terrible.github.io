@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DNA Strand Visualization</title>
+  <meta name="description" content="Interactive 3D DNA double helix visualization with sequence input">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="DNA-Visualization/style.css">
+</head>
+
+<body>
+  <div id="canvas-container"></div>
+
+  <div class="input-container">
+    <div class="input-wrapper">
+      <input type="text" id="accession-input" placeholder="Accession Number" autocomplete="off" spellcheck="false">
+      <button id="read-btn">Read</button>
+    </div>
+    <div class="input-wrapper">
+      <input type="text" id="sequence-input" placeholder="Enter DNA sequence (A, T, G, C)..." autocomplete="off"
+        spellcheck="false">
+      <button id="generate-btn">Generate DNA</button>
+    </div>
+    <div id="error-message"></div>
+    <div class="legend">
+      <div class="legend-item">
+        <span class="legend-color" style="background: #5050FF;"></span>
+        <span>A - Adenine</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-color" style="background: #E6E600;"></span>
+        <span>T - Thymine</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-color" style="background: #00FF00;"></span>
+        <span>G - Guanine</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-color" style="background: #E00000;"></span>
+        <span>C - Cytosine</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-color" style="background: #808080;"></span>
+        <span>Backbone</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="DNA-Visualization/app.js"></script>
+  <script src="DNA-Visualization/APItest.js"></script>
+</body>
+
+</html>
