@@ -1,7 +1,7 @@
 import { AttachEvent } from "../util.js";
 
 var originalCanvasWidth = document.getElementById("body").offsetWidth;
-const canvas = document.getElementById("triangleFractal");
+const canvas = document.getElementById("sierpinskiTriangle");
 const ctx = canvas.getContext("2d");
 
 initCanvas(); //Initialize
@@ -21,7 +21,10 @@ function initCanvas() {
   const triangleSize = Math.min(canvas.width, canvas.height) / 2;
   clearCanvasRedraw();
   //Redraw the triangle with the new dimensions.
-  const recursionLevel = parseInt(document.getElementById("recursionLevelInput").value, 10);
+  const recursionLevel = parseInt(
+    document.getElementById("recursionLevelInput").value,
+    10,
+  );
   const canvasCenter = originalCanvasWidth / 2;
   drawTriangle(canvasCenter, 0, triangleSize, recursionLevel);
 }
@@ -40,7 +43,10 @@ function adjustTriangle() {
   canvas.height = window.innerHeight / 2;
   clearCanvasRedraw();
   //Redraw the triangle with the new dimensions.
-  const recursionLevel = parseInt(document.getElementById("recursionLevelInput").value, 10);
+  const recursionLevel = parseInt(
+    document.getElementById("recursionLevelInput").value,
+    10,
+  );
   const triangleX = canvas.width / 2;
   const triangleSize = Math.min(canvas.width, canvas.height) / 2;
   drawTriangle(triangleX, 0, triangleSize, recursionLevel);
@@ -52,7 +58,7 @@ function drawTriangle(x, y, size, recursionLevel) {
   // Draw equilateral triangle using recursion
   // Height = size * Math.sqrt(3) / 2
   // Width = size
-  if (recursionLevel === 0) {
+  if (recursionLevel === 1) {
     ctx.fillStyle = "white";
     ctx.beginPath();
     ctx.moveTo(x, y);
