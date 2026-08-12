@@ -47,7 +47,7 @@ function init() {
     60,
     window.innerWidth / window.innerHeight,
     0.1,
-    1000
+    1000,
   );
   camera.position.set(15, 10, 15);
   camera.lookAt(0, 0, 0);
@@ -99,22 +99,22 @@ function init() {
     }
   });
 
-  document.getElementById("read-btn").addEventListener("click", e => {
-    userInputAccession(document.getElementById("accession-input").value.trim());
-  });
-  document.getElementById("accession-input").addEventListener("keypress", e => {
-    if (e.key === "Enter") {
-      userInputAccession(e.target.value.trim());
-    }
-  });
+  // document.getElementById("read-btn").addEventListener("click", e => {
+  //   userInputAccession(document.getElementById("accession-input").value.trim());
+  // });
+  // document.getElementById("accession-input").addEventListener("keypress", e => {
+  //   if (e.key === "Enter") {
+  //     userInputAccession(e.target.value.trim());
+  //   }
+  // });
 
   // Clear the 3D header if accession field is emptied
-  document.getElementById("accession-input").addEventListener("input", e => {
-    if (!e.target.value.trim()) {
-      updateFastaHeader(null);
-      document.getElementById("error-message").textContent = ""; // Clear error on reset
-    }
-  });
+  // document.getElementById("accession-input").addEventListener("input", e => {
+  //   if (!e.target.value.trim()) {
+  //     updateFastaHeader(null);
+  //     document.getElementById("error-message").textContent = ""; // Clear error on reset
+  //   }
+  // });
 
   // Input validation - only allow A, T, G, C
   document.getElementById("sequence-input").addEventListener("input", e => {
@@ -177,7 +177,7 @@ function updateFastaHeader(text) {
   // Calculate dynamic canvas size
   const maxLineWidth = Math.min(
     maxWidth,
-    Math.max(...lines.map(line => ctx.measureText(line).width))
+    Math.max(...lines.map(line => ctx.measureText(line).width)),
   );
   canvas.width = maxLineWidth + 100 * resolutionScale;
   canvas.height = lines.length * lineHeight + 40 * resolutionScale;
@@ -257,7 +257,7 @@ function updateHeaderPosition() {
   headerSprite.scale.set(
     canvas.width * currentScale,
     canvas.height * currentScale,
-    1
+    1,
   );
 }
 
@@ -328,7 +328,7 @@ async function fetchDNAByAccession(accession) {
 
       // Extract Definition (Header)
       const definitionMatch = text.match(
-        /DEFINITION\s+([\s\S]+?)(?=\n[A-Z]|$)/
+        /DEFINITION\s+([\s\S]+?)(?=\n[A-Z]|$)/,
       );
       headerText = definitionMatch
         ? definitionMatch[1].replace(/\s+/g, " ").trim()
@@ -365,7 +365,7 @@ async function fetchDNAByAccession(accession) {
             header: headerText,
             sequence,
             genes,
-          })
+          }),
         );
       } catch (e) {
         console.warn("LocalStorage limit reached, could not cache results");
@@ -403,7 +403,7 @@ function createCylinder(start, end, radius, color) {
   cylinder.position.copy(start).add(direction.multiplyScalar(0.5));
   cylinder.quaternion.setFromUnitVectors(
     new THREE.Vector3(0, 1, 0),
-    direction.clone().normalize()
+    direction.clone().normalize(),
   );
 
   return cylinder;
@@ -419,11 +419,13 @@ function getHelixPosition(index, radius, offset = 0) {
 }
 
 // Generate DNA structure from sequence
-function generateDNA(inputOverride, genes = []) {
-  const input = (
-    inputOverride || document.getElementById("sequence-input").value
-  )
-    .toUpperCase()
+function generateDNA() {
+  // future params for this function if I can get Accession number to work with NCBI API
+  // inputOverride, genes = []
+  // const input = (inputOverride || document.getElementById("sequence-input"))
+  const input = document
+    .getElementById("sequence-input")
+    .value.toUpperCase()
     .trim();
   const errorMsg = document.getElementById("error-message");
 
@@ -468,20 +470,20 @@ function generateDNA(inputOverride, genes = []) {
       const prevBackbonePos2 = getHelixPosition(
         i - 1,
         DNA_CONFIG.radius,
-        Math.PI
+        Math.PI,
       );
 
       const backbone1 = createCylinder(
         prevBackbonePos1,
         backbonePos1,
         DNA_CONFIG.backboneRadius,
-        BACKBONE_COLOR
+        BACKBONE_COLOR,
       );
       const backbone2 = createCylinder(
         prevBackbonePos2,
         backbonePos2,
         DNA_CONFIG.backboneRadius,
-        BACKBONE_COLOR
+        BACKBONE_COLOR,
       );
       dnaGroup.add(backbone1);
       dnaGroup.add(backbone2);
@@ -497,59 +499,59 @@ function generateDNA(inputOverride, genes = []) {
       backbonePos1,
       midpoint,
       DNA_CONFIG.bondRadius * 2,
-      NUCLEOTIDE_COLORS[base1]
+      NUCLEOTIDE_COLORS[base1],
     );
     const bar2 = createCylinder(
       backbonePos2,
       midpoint,
       DNA_CONFIG.bondRadius * 2,
-      NUCLEOTIDE_COLORS[base2]
+      NUCLEOTIDE_COLORS[base2],
     );
     dnaGroup.add(bar1);
     dnaGroup.add(bar2);
   }
 
   // Render Genes
-  genes.forEach((gene, index) => {
-    // Gene coordinates are usually 1-indexed in GenBank, indices are 0-indexed
-    const startIdx = Math.max(0, gene.start - 1);
-    const endIdx = Math.min(sequence.length - 1, gene.end - 1);
+  // genes.forEach((gene, index) => {
+  //   // Gene coordinates are usually 1-indexed in GenBank, indices are 0-indexed
+  //   const startIdx = Math.max(0, gene.start - 1);
+  //   const endIdx = Math.min(sequence.length - 1, gene.end - 1);
 
-    if (startIdx >= sequence.length) return;
+  //   if (startIdx >= sequence.length) return;
 
-    // Create a sheath/cylinder for the gene
-    const startPos = getHelixPosition(startIdx, 0, 0); // Along the central axis
-    const endPos = getHelixPosition(endIdx, 0, 0);
+  //   // Create a sheath/cylinder for the gene
+  //   const startPos = getHelixPosition(startIdx, 0, 0); // Along the central axis
+  //   const endPos = getHelixPosition(endIdx, 0, 0);
 
-    const direction = new THREE.Vector3().subVectors(endPos, startPos);
-    const length = direction.length();
+  //   const direction = new THREE.Vector3().subVectors(endPos, startPos);
+  //   const length = direction.length();
 
-    // We make it slightly thicker than the bonds to encompass the structure
-    const geometry = new THREE.CylinderGeometry(
-      DNA_CONFIG.radius * 1.1,
-      DNA_CONFIG.radius * 1.1,
-      length,
-      16
-    );
-    const material = new THREE.MeshPhongMaterial({
-      color: 0x00ffff, // Cyan for genes
-      transparent: true,
-      opacity: 0.3,
-      shininess: 100,
-      side: THREE.DoubleSide,
-    });
+  //   // We make it slightly thicker than the bonds to encompass the structure
+  //   const geometry = new THREE.CylinderGeometry(
+  //     DNA_CONFIG.radius * 1.1,
+  //     DNA_CONFIG.radius * 1.1,
+  //     length,
+  //     16,
+  //   );
+  //   const material = new THREE.MeshPhongMaterial({
+  //     color: 0x00ffff, // Cyan for genes
+  //     transparent: true,
+  //     opacity: 0.3,
+  //     shininess: 100,
+  //     side: THREE.DoubleSide,
+  //   });
 
-    const geneMesh = new THREE.Mesh(geometry, material);
-    geneMesh.position.copy(startPos).add(direction.clone().multiplyScalar(0.5));
-    geneMesh.quaternion.setFromUnitVectors(
-      new THREE.Vector3(0, 1, 0),
-      direction.clone().normalize()
-    );
+  //   const geneMesh = new THREE.Mesh(geometry, material);
+  //   geneMesh.position.copy(startPos).add(direction.clone().multiplyScalar(0.5));
+  //   geneMesh.quaternion.setFromUnitVectors(
+  //     new THREE.Vector3(0, 1, 0),
+  //     direction.clone().normalize(),
+  //   );
 
-    geneMesh.userData = { geneIndex: index, start: gene.start, end: gene.end };
-    genesGroup.add(geneMesh);
-    allGeneMeshes.push(geneMesh);
-  });
+  //   geneMesh.userData = { geneIndex: index, start: gene.start, end: gene.end };
+  //   genesGroup.add(geneMesh);
+  //   allGeneMeshes.push(geneMesh);
+  // });
 
   // Center the DNA structure (horizontal orientation)
   const centerX = ((sequence.length - 1) * DNA_CONFIG.verticalSpacing) / 2;
@@ -599,7 +601,7 @@ function animate() {
 
         // You could also show a tooltip here
         console.log(
-          `Hovering gene: ${hoveredGene.userData.start}..${hoveredGene.userData.end}`
+          `Hovering gene: ${hoveredGene.userData.start}..${hoveredGene.userData.end}`,
         );
       }
     } else {
